@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Neverland Coffee Bar — Training Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--espresso:#2C1810;--roast:#4A2C1A;--caramel:#C8860A;--cream:#F5ECD7;--foam:#FBF6EE;--milk:#FFFFFF;--err:#C0392B;--pass:#27AE60;--border:rgba(44,24,16,0.15)}
+body{font-family:'Lato',sans-serif;background:var(--foam);color:var(--espresso);min-height:100vh}
+.app{max-width:680px;margin:0 auto;padding:1rem}
+.brand-header{text-align:center;padding:2rem 1rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.brand-logo{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--caramel);font-weight:700;margin-bottom:.5rem}
+.brand-title{font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,26px);font-weight:700;color:var(--espresso)}
+.brand-sub{font-size:13px;color:var(--roast);opacity:.7;margin-top:6px;letter-spacing:1px}
+.card{background:var(--milk);border-radius:16px;border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:10px;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:opacity .1s;letter-spacing:.5px;width:100%;margin-top:8px}
+.btn-primary{background:var(--caramel);color:white}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:var(--cream);color:var(--espresso);border:1px solid var(--border)}
+.btn-danger{background:var(--err);color:white}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+label{display:block;font-size:13px;font-weight:700;color:var(--roast);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
+input[type=text],input[type=password],select,textarea{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--foam);font-family:'Lato',sans-serif;font-size:15px;color:var(--espresso);outline:none;margin-bottom:1rem}
+input:focus,select:focus,textarea:focus{border-color:var(--caramel);background:var(--milk)}
+textarea{resize:vertical;min-height:90px}
+.progress-wrap{background:var(--cream);border-radius:99px;height:6px;overflow:hidden;margin-bottom:4px}
+.progress-fill{height:100%;background:var(--caramel);border-radius:99px;transition:width .4s}
+.progress-label{font-size:12px;color:var(--roast);opacity:.7;text-align:right;margin-bottom:.75rem}
+.badge{display:inline-block;padding:3px 12px;border-radius:99px;background:var(--cream);color:var(--caramel);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:.75rem}
+.q-num{font-size:12px;color:var(--roast);opacity:.6;margin-bottom:4px}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;line-height:1.5;margin-bottom:1.25rem}
+.q-scenario{background:var(--cream);border-left:3px solid var(--caramel);border-radius:0 8px 8px 0;padding:10px 14px;font-style:italic;font-size:15px;margin-bottom:1rem;color:var(--roast)}
+.option{display:block;width:100%;text-align:left;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--foam);font-family:'Lato',sans-serif;font-size:14px;color:var(--espresso);cursor:pointer;margin-bottom:8px;line-height:1.4}
+.option:hover{border-color:var(--caramel);background:var(--cream)}
+.option.selected{border-color:var(--caramel);background:#FFF3DC;font-weight:700}
+.option-letter{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--cream);color:var(--caramel);font-weight:700;font-size:12px;text-align:center;line-height:22px;margin-right:10px}
+.option.selected .option-letter{background:var(--caramel);color:white}
+.nav-row{display:flex;gap:10px;margin-top:1.5rem}
+.nav-row .btn{flex:1;margin-top:0}
+.descriptions{background:var(--foam);border-radius:10px;padding:12px 14px;margin-bottom:1rem}
+.desc-item{font-size:13px;margin-bottom:6px;display:flex;gap:8px}
+.desc-key{font-weight:700;color:var(--caramel);min-width:16px}
+.match-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.match-label{font-weight:700;font-size:14px;min-width:180px}
+.result-score{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;text-align:center}
+.result-pct{font-size:22px;color:var(--caramel);text-align:center;margin-bottom:8px}
+.result-badge{display:inline-block;padding:6px 20px;border-radius:99px;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase}
+.pass{background:#D5F5E3;color:var(--pass)}
+.fail{background:#FDECEA;color:var(--err)}
+.section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:1rem}
+.hidden{display:none}
+.screen{display:none}
+.screen.active{display:block}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:1rem}
+th{background:var(--cream);padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--roast)}
+td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-card{background:var(--cream);border-radius:12px;padding:14px;text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700}
+.stat-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--roast);opacity:.7}
+@media(max-width:480px){.match-row{flex-direction:column;align-items:stretch}.nav-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- START SCREEN -->
+<div id="screen-start" class="screen active">
+  <div class="brand-header">
+    <div class="brand-logo">☕ Employee Training</div>
+    <div class="brand-title">Neverland Coffee Bar</div>
+    <div class="brand-sub">Menu Knowledge &amp; Customer Service Test</div>
+  </div>
+  <div class="card">
+    <div class="section-title">Welcome</div>
+    <p style="font-size:14px;color:var(--roast);margin-bottom:1.5rem;line-height:1.6">This test covers Neverland's menu, allergen awareness, and customer service. 30 questions — you need 26/30 (87%) to pass.</p>
+    <label>Your Full Name *</label>
+    <input type="text" id="emp-name" placeholder="First and Last Name"/>
+    <label>Position (optional)</label>
+    <select id="emp-pos">
+      <option value="">Select your position</option>
+      <option>FOH</option><option>Barista</option><option>Supervisor</option><option>BOH</option><option>Manager</option><option>Other</option>
+    </select>
+    <button class="btn btn-primary" onclick="startTest()">Begin Test →</button>
+    <button class="btn btn-secondary" style="margin-top:8px;font-size:12px" onclick="showAdminLogin()">Manager / Admin Login</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="screen-adminlogin" class="screen">
+  <div class="brand-header">
+    <div class="brand-logo">☕ Employee Training</div>
+    <div class="brand-title">Neverland Coffee Bar</div>
+  </div>
+  <div class="card">
+    <div class="section-title">Admin Login</div>
+    <label>Admin Password</label>
+    <input type="password" id="admin-pw" placeholder="Enter password"/>
+    <p id="admin-err" style="color:var(--err);font-size:13px;margin-bottom:8px;display:none">Incorrect password.</p>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="showScreen('screen-start')">← Back</button>
+      <button class="btn btn-primary" onclick="adminLogin()">Enter Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEST SCREEN -->
+<div id="screen-test" class="screen">
+  <div class="brand-header">
+    <div class="brand-logo">☕ Employee Training</div>
+    <div class="brand-title">Neverland Coffee Bar</div>
+  </div>
+  <div class="card">
+    <div class="progress-wrap"><div class="progress-fill" id="progress-fill" style="width:3%"></div></div>
+    <div class="progress-label" id="progress-label">Question 1 of 30</div>
+    <div class="badge" id="q-section-badge">Section A</div>
+    <div class="q-num" id="q-num">Question 1 of 30</div>
+    <div class="q-text" id="q-text"></div>
+    <div id="q-scenario" class="q-scenario hidden"></div>
+    <div id="q-options"></div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" id="btn-prev" onclick="prevQ()">← Back</button>
+      <button class="btn btn-primary" id="btn-next" onclick="nextQ()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="screen-result" class="screen">
+  <div class="brand-header">
+    <div class="brand-logo">☕ Employee Training</div>
+    <div class="brand-title">Neverland Coffee Bar</div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div id="result-meta" style="font-size:14px;color:var(--roast);margin-bottom:.5rem"></div>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-pct" id="result-pct"></div>
+    <div style="margin-bottom:1.5rem"><span class="result-badge" id="result-badge"></span></div>
+    <div id="result-msg" style="border-radius:12px;padding:1rem;font-size:15px;line-height:1.6"></div>
+    <button class="btn btn-secondary" style="margin-top:1rem" onclick="showScreen('screen-start')">Take Test Again</button>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="screen-admin" class="screen">
+  <div class="brand-header">
+    <div class="brand-logo">☕ Employee Training</div>
+    <div class="brand-title">Neverland Coffee Bar</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:1rem">
+      <div class="section-title" style="margin:0">Admin Dashboard</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="width:auto;margin:0;font-size:12px;padding:8px 12px" onclick="exportCSV()">Export CSV</button>
+        <button class="btn btn-secondary" style="width:auto;margin:0;font-size:12px;padding:8px 12px" onclick="showScreen('screen-start')">← Exit</button>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-passed" style="color:var(--pass)">0</div><div class="stat-lbl">Passed</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-avg">0</div><div class="stat-lbl">Avg Score</div></div>
+    </div>
+    <input type="text" id="admin-search" placeholder="Search by name…" oninput="renderAdmin()" style="margin-bottom:.5rem"/>
+    <div id="admin-table-wrap"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const ADMIN_PW = "NeverlandAdmin2025";
+const PASS_SCORE = 26;
+const STORAGE_KEY = "neverland_v2";
+
+const MC = [
+  {id:1,q:"What egg styles can customers choose from?",opts:["Sunny side up, scrambled, over medium, boiled, or egg whites","Sunny side up, over easy, over medium, hard fried, scrambled, boiled, or egg whites","Sunny side up, over easy, poached, boiled, or egg whites","Scrambled, over easy, over hard, boiled, or egg whites"],a:1},
+  {id:2,q:"How much extra are egg whites?",opts:["$0.50","$1.00","$1.50","$2.00"],a:1},
+  {id:3,q:"What comes in the Truffle Croissant?",opts:["Mushrooms, sweet onions, truffle oil, mozzarella, and arugula","Mushrooms, sweet onions, truffle oil, and mozzarella","Mushrooms, fontina cheese, truffle oil, egg, and chives","Mushrooms, pesto, mozzarella, sweet onions, and tomato"],a:1},
+  {id:4,q:"What comes in the Brunch Croissant?",opts:["Scrambled egg, kosher-style bacon, fontina cheese, avocado, and chives","Scrambled egg, kosher-style bacon, mozzarella, avocado, and arugula","Sunny-side-up egg, kosher-style bacon, fontina cheese, avocado, and chives","Scrambled egg, turkey bacon, goat cheese, avocado, and chives"],a:0},
+  {id:5,q:"What bread is normally used in the Peter's Pan section?",opts:["Gluten-free bread","Sourdough","Challah","Pita"],a:1},
+  {id:6,q:"Which Peter's Pan item includes kefir, feta cheese, arugula, zaatar, kalamata olives, red onions, cherry tomatoes, and olive oil?",opts:["Greek Toast","Caprese Toast","Avocado Toast","Smoked Salmon Bagel"],a:0},
+  {id:7,q:"What are the recommended add-ons for the Avocado Toast?",opts:["Egg, smoked salmon, and kosher-style bacon","Egg, tuna salad, and smoked salmon","Egg, goat cheese, and kosher-style bacon","Smoked salmon, feta, and avocado"],a:0},
+  {id:8,q:"What comes in the Smoked Salmon Bagel?",opts:["Smoked salmon, kefir, capers, onions, and dill","Smoked salmon, cream cheese, capers, onions, and dill","Smoked salmon, kefir, cucumber, cherry tomatoes, and dill","Smoked salmon, goat cheese, capers, onions, and arugula"],a:0},
+  {id:9,q:"What is the correct description of the Grilled Salmon?",opts:["Grilled salmon served with quinoa, arugula, avocado, sesame seeds, 2 eggs, sunflower seeds, and pumpkin seeds","Grilled salmon served with mixed greens, quinoa, kalamata olives, avocado, cherry tomatoes, and house dressing","Grilled salmon served with cucumber, corn, tomato, avocado, arugula, and lemon dressing","Grilled salmon served with mixed greens, spicy mayo, avocado, pumpkin seeds, red onion, cherry tomatoes, and sesame seeds"],a:1},
+  {id:10,q:"What comes in the Healthy Bowl?",opts:["Quinoa, sunflower seeds, pumpkin seeds, smoked salmon, 2 eggs, arugula, avocado, and sesame seeds","Quinoa, smoked salmon, avocado, kalamata olives, cherry tomatoes, goat cheese, and house dressing","Mixed greens, smoked salmon, 2 eggs, avocado, pumpkin seeds, cherry tomatoes, and tahini","Quinoa, tuna salad, 2 eggs, avocado, arugula, pumpkin seeds, and sesame seeds"],a:0},
+  {id:11,q:"A customer has a nut allergy and asks which dressing is safest. What is the best answer?",opts:["Lemon dressing is the safest option, but we still need to inform the kitchen because cross-contamination is possible","Pesto is safe because it is mostly basil and olive oil","Tahini is safe because it does not contain tree nuts","Any dressing is fine as long as the customer only has a mild allergy"],a:0},
+  {id:12,q:"What comes in the Captain Hook Chicken Salad?",opts:["Chicken, avocado, tomato, cucumber, arugula, corn, and house dressing","Chicken, avocado, cherry tomatoes, quinoa, corn, feta, and house dressing","Chicken, cucumber, arugula, apple, pumpkin seeds, and tahini","Chicken, avocado, tomato, cucumber, mixed greens, corn, and pesto"],a:0},
+  {id:13,q:"What is the Perfect Pair Board?",opts:["A board where the guest chooses 2 cheeses, 2 cured meats, and 2 sides","A board with brie, burrata, prosciutto, salami, olives, and pita","A board where the guest chooses 3 cheeses, 2 cured meats, and 1 side","A board with 2 cheeses, 1 cured meat, hummus, pita, and jam"],a:0},
+  {id:14,q:"What comes in the Secret Pita?",opts:["Beef chorizo, sunny-side-up egg, tomato, cilantro, onion, and tahini","Arayes meat, sunny-side-up egg, tomato, cilantro, onion, and aioli","Beef chorizo, boiled egg, tomato, cilantro, onion, and tahini","Beef chorizo, sunny-side-up egg, avocado, tomato, onion, and tahini"],a:0},
+  {id:15,q:"What comes in the Challah Burger?",opts:["Fontina cheese, avocado, egg, kosher-style bacon, and arayes meat","Mozzarella, avocado, egg, kosher-style bacon, and arayes meat","Fontina cheese, avocado, egg, beef chorizo, and arayes meat","Fontina cheese, tomato, egg, kosher-style bacon, and arayes meat"],a:0},
+  {id:16,q:"What comes in the Arayes Pixie Dust?",opts:["Beef stuffed in crispy pita, served with tahini, olives, and pico","Beef stuffed in challah, served with aioli, olives, and pico","Beef chorizo in crispy pita, served with tahini, tomato, and cilantro","Arayes meat with pita, avocado, egg, tahini, and pico"],a:0},
+  {id:17,q:"Which pizzetta has kalamata olives, mozzarella, feta, red onions, and cherry tomatoes?",opts:["Caprese Ponte","Santorini","Hawaiian Pizza","Mozzarella"],a:1},
+  {id:18,q:"Which focaccia is the dessert/sweet option?",opts:["Brie Focaccia","Strawberry Focaccia","Nutella Focaccia","Sweet Challah Focaccia"],a:2},
+  {id:19,q:"What comes on the Samba Açaí?",opts:["Strawberries, blueberries, granola, coconut shavings, and honey","Strawberries, bananas, granola, coconut shavings, and honey","Strawberries, blueberries, granola, almonds, and agave","Blueberries, bananas, granola, coconut shavings, and honey"],a:0},
+  {id:20,q:"What milk options does Neverland offer?",opts:["Whole milk, half & half, almond milk, coconut milk, soy milk, and oat milk","Whole milk, skim milk, almond milk, coconut milk, soy milk, and oat milk","Whole milk, half & half, almond milk, coconut milk, macadamia milk, and oat milk","Whole milk, almond milk, coconut milk, soy milk, oat milk, and lactose-free milk"],a:0},
+];
+
+const MATCH_DESCS = [
+  {id:"A",text:"Sweet iced matcha with 100% organic matcha ice cubes"},
+  {id:"B",text:"Roasted coffee and cocoa beans blended with sweet milk and secret recipe"},
+  {id:"C",text:"Lemonade and mint slushie"},
+  {id:"D",text:"Agave waffle with brie cheese, almonds, and honey"},
+  {id:"E",text:"Green tea, mint, lemon, and passion fruit"},
+];
+const MATCH = [
+  {id:21,item:"Neverland Iced Coffee",a:"B"},
+  {id:22,item:"Iced Matcha",a:"A"},
+  {id:23,item:"Lemonana",a:"C"},
+  {id:24,item:"Melted Brie Waffle",a:"D"},
+  {id:25,item:"Miami Iced Tea",a:"E"},
+];
+const SA = [
+  {id:26,scenario:'"I\'ve never been here before. What should I get?"',prompt:"Write a strong recommendation using one food item and one drink. Explain why and use confident, guest-friendly language.",kw:[["brunch croissant","avocado toast","truffle croissant","healthy bowl","acai","açaí","grilled salmon"],["iced coffee","matcha","latte","lemonade","lemonana"]]},
+  {id:27,scenario:'"I have a severe nut allergy. What can I eat?"',prompt:"Address cross-contamination, what you will do to help, and how the order will be handled.",kw:[["cross-contamination","cross contamination","cannot guarantee","can't guarantee","not 100%"],["inform","notify","tell","let"],["kitchen","supervisor","manager"]]},
+  {id:28,scenario:"A table is upset because they see an 18% service charge on the check.",prompt:"Stay professional, explain the charge, and offer next steps.",kw:[["18%","service charge","service fee"],["menu","listed","stated","table service"],["calm","understand","apologize","manager","help"]]},
+  {id:29,scenario:"A customer wants something healthy, high-protein, and not too heavy.",prompt:"Recommend a specific menu item and explain why it fits their needs.",kw:[["healthy bowl","grilled salmon","captain hook","chicken salad"],["protein","quinoa","salmon","chicken","eggs"]]},
+  {id:30,scenario:"A customer is deciding between a basic coffee and a specialty drink.",prompt:"Write your upsell pitch. Recommend a specific specialty drink and use friendly, non-pushy language.",kw:[["neverland iced coffee","tiramisu","peanut butter","strawberry matcha","golden coffee","specialty"],["special","signature","unique","known for","favorite","recommend"]]},
+];
+
+let empName="", empPos="", curQ=0, answers={};
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function startTest(){
+  empName=document.getElementById('emp-name').value.trim();
+  if(!empName){alert('Please enter your name.');return;}
+  empPos=document.getElementById('emp-pos').value;
+  curQ=0; answers={};
+  renderQ();
+  showScreen('screen-test');
+}
+
+function showAdminLogin(){showScreen('screen-adminlogin');}
+function adminLogin(){
+  const pw=document.getElementById('admin-pw').value;
+  if(pw===ADMIN_PW){showScreen('screen-admin');renderAdmin();}
+  else{const e=document.getElementById('admin-err');e.style.display='block';setTimeout(()=>e.style.display='none',2000);}
+}
+
+function getQ(i){
+  if(i<20)return{type:'mc',q:MC[i]};
+  if(i<25)return{type:'match',q:MATCH[i-20]};
+  return{type:'sa',q:SA[i-25]};
+}
+
+function renderQ(){
+  const {type,q}=getQ(curQ);
+  const pct=Math.round(((curQ+1)/30)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-label').textContent='Question '+(curQ+1)+' of 30';
+  document.getElementById('q-num').textContent='Question '+q.id+' of 30';
+  const badges=['Section A — Multiple Choice','Section B — Matching','Section C — Customer Service'];
+  document.getElementById('q-section-badge').textContent=curQ<20?badges[0]:curQ<25?badges[1]:badges[2];
+  document.getElementById('btn-prev').disabled=curQ===0;
+  document.getElementById('btn-next').textContent=curQ===29?'Review & Submit →':'Next →';
+
+  const scenario=document.getElementById('q-scenario');
+  const opts=document.getElementById('q-options');
+  const qtext=document.getElementById('q-text');
+
+  scenario.classList.add('hidden');
+  opts.innerHTML='';
+
+  if(type==='mc'){
+    qtext.textContent=q.q;
+    q.opts.forEach((opt,i)=>{
+      const btn=document.createElement('button');
+      btn.className='option'+(answers['q'+q.id]===i?' selected':'');
+      btn.innerHTML='<span class="option-letter">'+String.fromCharCode(65+i)+'</span>'+opt;
+      btn.onclick=()=>{answers['q'+q.id]=i;renderQ();};
+      opts.appendChild(btn);
+    });
+  } else if(type==='match'){
+    qtext.textContent='Match the item to its correct description.';
+    let descHTML='<div class="descriptions">';
+    MATCH_DESCS.forEach(d=>{descHTML+='<div class="desc-item"><span class="desc-key">'+d.id+'.</span><span>'+d.text+'</span></div>';});
+    descHTML+='</div>';
+    const row=document.createElement('div');
+    row.className='match-row';
+    row.innerHTML=descHTML+'<div class="match-label">'+q.item+'</div>';
+    const sel=document.createElement('select');
+    sel.style.flex='1';sel.style.marginBottom='0';
+    sel.innerHTML='<option value="">Select description…</option>';
+    MATCH_DESCS.forEach(d=>{sel.innerHTML+='<option value="'+d.id+'"'+(answers['q'+q.id]===d.id?' selected':'')+'>'+d.id+' — '+d.text.slice(0,40)+'…</option>';});
+    sel.onchange=()=>{answers['q'+q.id]=sel.value;};
+    row.appendChild(sel);
+    opts.appendChild(row);
+  } else {
+    scenario.textContent=q.scenario;
+    scenario.classList.remove('hidden');
+    qtext.textContent=q.prompt;
+    const ta=document.createElement('textarea');
+    ta.placeholder='Type your response here…';
+    ta.value=answers['q'+q.id]||'';
+    ta.onchange=()=>{answers['q'+q.id]=ta.value;};
+    opts.appendChild(ta);
+  }
+}
+
+function prevQ(){if(curQ>0){curQ--;renderQ();}}
+function nextQ(){
+  if(curQ===29){submitTest();return;}
+  curQ++;renderQ();
+}
+
+function scoreSA(ans,q){
+  if(!ans||ans.trim().length<10)return 0;
+  const l=ans.toLowerCase();
+  const matched=q.kw.filter(g=>g.some(k=>l.includes(k)));
+  return matched.length>=Math.ceil(q.kw.length*0.5)?1:0;
+}
+
+function submitTest(){
+  let score=0;
+  const breakdown={};
+  MC.forEach(q=>{const a=answers['q'+q.id];const ok=a===q.a;breakdown['q'+q.id]={a,ok,ca:q.a};if(ok)score++;});
+  MATCH.forEach(q=>{const a=answers['q'+q.id];const ok=a===q.a;breakdown['q'+q.id]={a,ok,ca:q.a};if(ok)score++;});
+  SA.forEach(q=>{const a=answers['q'+q.id]||'';const s=scoreSA(a,q);breakdown['q'+q.id]={a,ok:s===1};score+=s;});
+
+  const result={id:Date.now()+'_'+Math.random().toString(36).slice(2,6),name:empName,pos:empPos,date:new Date().toISOString(),score,breakdown};
+  const subs=loadSubs();subs.unshift(result);saveSubs(subs);
+
+  const passed=score>=PASS_SCORE;
+  const pct=Math.round((score/30)*100);
+  document.getElementById('result-meta').textContent=empName+' · '+(empPos||'—')+' · '+new Date().toLocaleString();
+  document.getElementById('result-score').textContent=score+'/30';
+  document.getElementById('result-pct').textContent=pct+'%';
+  const badge=document.getElementById('result-badge');
+  badge.textContent=passed?'✓ Passed':'✗ Did Not Pass';
+  badge.className='result-badge '+(passed?'pass':'fail');
+  const msg=document.getElementById('result-msg');
+  msg.style.background=passed?'#D5F5E3':'#FDECEA';
+  msg.style.color=passed?'var(--pass)':'var(--err)';
+  msg.textContent=passed?'Congratulations, you passed the Neverland Menu & Service Test!':'Please review the menu and retake the test before working full service.';
+  showScreen('screen-result');
+}
+
+function loadSubs(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveSubs(s){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s));}catch{}}
+
+function renderAdmin(){
+  const subs=loadSubs();
+  const search=(document.getElementById('admin-search').value||'').toLowerCase();
+  const filtered=subs.filter(s=>s.name.toLowerCase().includes(search));
+  const passed=subs.filter(s=>s.score>=PASS_SCORE).length;
+  const avg=subs.length?Math.round(subs.reduce((a,s)=>a+s.score,0)/subs.length):0;
+  document.getElementById('stat-total').textContent=subs.length;
+  document.getElementById('stat-passed').textContent=passed;
+  document.getElementById('stat-avg').textContent=avg;
+  let html='<table><thead><tr><th>Name</th><th>Position</th><th>Date</th><th>Score</th><th>Result</th></tr></thead><tbody>';
+  if(filtered.length===0)html+='<tr><td colspan="5" style="text-align:center;color:var(--roast);padding:1.5rem">No submissions yet.</td></tr>';
+  filtered.forEach(s=>{
+    const p=s.score>=PASS_SCORE;
+    html+='<tr><td style="font-weight:700">'+s.name+'</td><td>'+(s.pos||'—')+'</td><td style="font-size:12px">'+new Date(s.date).toLocaleString()+'</td><td style="font-weight:700">'+s.score+'/30 ('+Math.round((s.score/30)*100)+'%)</td><td><span class="tag '+(p?'pass':'fail')+'">'+(p?'Passed':'Not Passed')+'</span></td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('admin-table-wrap').innerHTML=html;
+}
+
+function exportCSV(){
+  const subs=loadSubs();
+  const rows=[['Name','Position','Date','Score','Percentage','Result'],...subs.map(s=>[s.name,s.pos||'',new Date(s.date).toLocaleString(),s.score,Math.round((s.score/30)*100)+'%',s.score>=PASS_SCORE?'Passed':'Did Not Pass'])];
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='neverland_results.csv';a.click();
+}
+</script>
+</body>
+</html>
