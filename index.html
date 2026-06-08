@@ -3,369 +3,1148 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Neverland Coffee Bar — Training Test</title>
+<title>Neverland Coffee Bar — Employee Training</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--espresso:#2C1810;--roast:#4A2C1A;--caramel:#C8860A;--cream:#F5ECD7;--foam:#FBF6EE;--milk:#FFFFFF;--err:#C0392B;--pass:#27AE60;--border:rgba(44,24,16,0.15)}
+:root{--espresso:#2C1810;--roast:#4A2C1A;--caramel:#C8860A;--latte:#D4A96A;--cream:#F5ECD7;--foam:#FBF6EE;--milk:#fff;--err:#C0392B;--pass:#27AE60;--border:rgba(44,24,16,0.15);--shadow:0 2px 12px rgba(44,24,16,0.08)}
 body{font-family:'Lato',sans-serif;background:var(--foam);color:var(--espresso);min-height:100vh}
-.app{max-width:680px;margin:0 auto;padding:1rem}
+.app{max-width:700px;margin:0 auto;padding:1rem;min-height:100vh}
 .brand-header{text-align:center;padding:2rem 1rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
 .brand-logo{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--caramel);font-weight:700;margin-bottom:.5rem}
-.brand-title{font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,26px);font-weight:700;color:var(--espresso)}
+.brand-title{font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,26px);font-weight:700;color:var(--espresso);line-height:1.2}
 .brand-sub{font-size:13px;color:var(--roast);opacity:.7;margin-top:6px;letter-spacing:1px}
-.card{background:var(--milk);border-radius:16px;border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:10px;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:opacity .1s;letter-spacing:.5px;width:100%;margin-top:8px}
+.card{background:var(--milk);border-radius:16px;border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 24px;border-radius:10px;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:transform .1s,opacity .1s;letter-spacing:.5px}
+.btn:active{transform:scale(.97)}
 .btn-primary{background:var(--caramel);color:white}
 .btn-primary:hover{opacity:.9}
 .btn-secondary{background:var(--cream);color:var(--espresso);border:1px solid var(--border)}
+.btn-secondary:hover{background:#EDE0C8}
 .btn-danger{background:var(--err);color:white}
+.btn-green{background:var(--pass);color:white}
+.btn-full{width:100%}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 label{display:block;font-size:13px;font-weight:700;color:var(--roast);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
-input[type=text],input[type=password],select,textarea{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--foam);font-family:'Lato',sans-serif;font-size:15px;color:var(--espresso);outline:none;margin-bottom:1rem}
+input[type="text"],input[type="password"],select,textarea{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--foam);font-family:'Lato',sans-serif;font-size:15px;color:var(--espresso);outline:none;transition:border-color .2s}
 input:focus,select:focus,textarea:focus{border-color:var(--caramel);background:var(--milk)}
 textarea{resize:vertical;min-height:90px}
-.progress-wrap{background:var(--cream);border-radius:99px;height:6px;overflow:hidden;margin-bottom:4px}
-.progress-fill{height:100%;background:var(--caramel);border-radius:99px;transition:width .4s}
-.progress-label{font-size:12px;color:var(--roast);opacity:.7;text-align:right;margin-bottom:.75rem}
-.badge{display:inline-block;padding:3px 12px;border-radius:99px;background:var(--cream);color:var(--caramel);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:.75rem}
-.q-num{font-size:12px;color:var(--roast);opacity:.6;margin-bottom:4px}
-.q-text{font-family:'Playfair Display',serif;font-size:17px;line-height:1.5;margin-bottom:1.25rem}
+.progress-bar-wrap{background:var(--cream);border-radius:99px;height:7px;overflow:hidden;margin-bottom:6px}
+.progress-bar-fill{height:100%;background:var(--caramel);border-radius:99px;transition:width .4s ease}
+.progress-label{font-size:12px;color:var(--roast);opacity:.7;text-align:right}
+.q-section-badge{display:inline-block;padding:3px 12px;border-radius:99px;background:var(--cream);color:var(--caramel);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem}
+.q-number{font-size:12px;color:var(--roast);opacity:.6;margin-bottom:4px}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;color:var(--espresso);line-height:1.5;margin-bottom:1.25rem}
 .q-scenario{background:var(--cream);border-left:3px solid var(--caramel);border-radius:0 8px 8px 0;padding:10px 14px;font-style:italic;font-size:15px;margin-bottom:1rem;color:var(--roast)}
-.option{display:block;width:100%;text-align:left;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--foam);font-family:'Lato',sans-serif;font-size:14px;color:var(--espresso);cursor:pointer;margin-bottom:8px;line-height:1.4}
-.option:hover{border-color:var(--caramel);background:var(--cream)}
-.option.selected{border-color:var(--caramel);background:#FFF3DC;font-weight:700}
-.option-letter{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--cream);color:var(--caramel);font-weight:700;font-size:12px;text-align:center;line-height:22px;margin-right:10px}
-.option.selected .option-letter{background:var(--caramel);color:white}
+.option-btn{display:block;width:100%;text-align:left;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--foam);font-family:'Lato',sans-serif;font-size:14px;color:var(--espresso);cursor:pointer;transition:all .15s;margin-bottom:8px;line-height:1.4}
+.option-btn:hover{border-color:var(--caramel);background:var(--cream)}
+.option-btn.selected{border-color:var(--caramel);background:#FFF3DC;font-weight:700}
+.option-btn.correct{border-color:var(--pass);background:#D5F5E3}
+.option-btn.incorrect{border-color:var(--err);background:#FDECEA}
+.option-letter{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--cream);color:var(--caramel);font-weight:700;font-size:12px;text-align:center;line-height:22px;margin-right:10px;flex-shrink:0}
+.option-btn.selected .option-letter{background:var(--caramel);color:white}
+.option-btn.correct .option-letter{background:var(--pass);color:white}
+.option-btn.incorrect .option-letter{background:var(--err);color:white}
+.match-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.match-item{font-weight:700;font-size:14px;min-width:160px}
 .nav-row{display:flex;gap:10px;margin-top:1.5rem}
-.nav-row .btn{flex:1;margin-top:0}
-.descriptions{background:var(--foam);border-radius:10px;padding:12px 14px;margin-bottom:1rem}
-.desc-item{font-size:13px;margin-bottom:6px;display:flex;gap:8px}
-.desc-key{font-weight:700;color:var(--caramel);min-width:16px}
-.match-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.match-label{font-weight:700;font-size:14px;min-width:180px}
-.result-score{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;text-align:center}
+.nav-row .btn{flex:1}
+.result-score{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;color:var(--espresso);text-align:center}
 .result-pct{font-size:22px;color:var(--caramel);text-align:center;margin-bottom:8px}
 .result-badge{display:inline-block;padding:6px 20px;border-radius:99px;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase}
-.pass{background:#D5F5E3;color:var(--pass)}
-.fail{background:#FDECEA;color:var(--err)}
-.section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:1rem}
-.hidden{display:none}
-.screen{display:none}
-.screen.active{display:block}
-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:1rem}
-th{background:var(--cream);padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--roast)}
-td{padding:8px 10px;border-bottom:1px solid var(--border)}
-.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase}
+.badge-pass{background:#D5F5E3;color:var(--pass)}
+.badge-fail{background:#FDECEA;color:var(--err)}
+.review-item{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);gap:12px}
+.review-q{font-size:13px;flex:1}
+.review-a{font-size:13px;max-width:200px;text-align:right}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.tag-pass{background:#D5F5E3;color:var(--pass)}
+.tag-fail{background:#FDECEA;color:var(--err)}
+.tag-correct{background:#D5F5E3;color:var(--pass)}
+.tag-incorrect{background:#FDECEA;color:var(--err)}
+.tag-review{background:#FFF3CD;color:#856404}
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
 .stat-card{background:var(--cream);border-radius:12px;padding:14px;text-align:center}
-.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700}
-.stat-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--roast);opacity:.7}
-@media(max-width:480px){.match-row{flex-direction:column;align-items:stretch}.nav-row{flex-direction:column}}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--espresso)}
+.stat-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--roast);opacity:.7;margin-top:2px}
+.section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:1rem;color:var(--espresso)}
+.section-sub{font-size:13px;color:var(--roast);opacity:.8;margin-bottom:1.5rem;line-height:1.6}
+.search-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.search-row input{flex:1;min-width:140px}
+.search-row select{width:140px}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{background:var(--cream);padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--roast);border-bottom:1px solid var(--border)}
+.admin-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.admin-table tr:hover td{background:var(--foam)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.detail-cell{background:var(--foam);border-radius:8px;padding:10px}
+.detail-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--roast);opacity:.7;margin-bottom:2px}
+.detail-val{font-size:14px;font-weight:700;color:var(--espresso)}
+.q-detail-row{padding:10px 0;border-bottom:1px solid var(--border)}
+.q-detail-text{font-size:13px;color:var(--espresso);margin-bottom:4px}
+.q-detail-sa{background:var(--foam);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--espresso);margin:6px 0;font-style:italic;line-height:1.5}
+.override-row{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}
+.override-row select{width:auto;padding:6px 10px;font-size:13px}
+/* Home screen menu buttons */
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1.5rem}
+.home-btn{background:var(--milk);border:1.5px solid var(--border);border-radius:14px;padding:1.25rem 1rem;cursor:pointer;text-align:center;transition:all .15s;box-shadow:var(--shadow)}
+.home-btn:hover{border-color:var(--caramel);background:var(--cream);transform:translateY(-2px)}
+.home-btn-icon{font-size:28px;margin-bottom:8px}
+.home-btn-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--espresso);margin-bottom:4px}
+.home-btn-sub{font-size:12px;color:var(--roast);opacity:.7}
+/* Study center */
+.study-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.5rem}
+.study-nav-btn{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--foam);color:var(--roast);transition:all .15s}
+.study-nav-btn.active{background:var(--caramel);color:white;border-color:var(--caramel)}
+.study-nav-btn:hover{border-color:var(--caramel)}
+.study-section{margin-bottom:1.5rem}
+.study-section h3{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--espresso);margin-bottom:0.75rem;border-bottom:1px solid var(--border);padding-bottom:0.5rem}
+.study-section p{font-size:14px;color:var(--roast);line-height:1.7;margin-bottom:0.75rem}
+.study-section ul{padding-left:1.25rem;margin-bottom:0.75rem}
+.study-section li{font-size:14px;color:var(--roast);line-height:1.8}
+.study-callout{background:var(--cream);border-left:3px solid var(--caramel);border-radius:0 8px 8px 0;padding:12px 16px;margin:1rem 0;font-size:14px;color:var(--espresso);line-height:1.6;font-style:italic}
+.menu-category{background:var(--foam);border-radius:12px;border:1px solid var(--border);padding:1rem;margin-bottom:10px}
+.menu-category-title{font-weight:700;font-size:14px;color:var(--espresso);margin-bottom:6px}
+.menu-category-desc{font-size:13px;color:var(--roast);margin-bottom:8px;line-height:1.5}
+.menu-items{display:flex;flex-wrap:wrap;gap:5px}
+.menu-tag{background:var(--cream);border-radius:99px;padding:3px 10px;font-size:12px;color:var(--roast);font-weight:700}
+/* Flashcards */
+.flashcard-wrap{perspective:1000px;width:100%;margin-bottom:1rem}
+.flashcard{width:100%;min-height:160px;border-radius:16px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .5s;box-shadow:var(--shadow)}
+.flashcard.flipped{transform:rotateY(180deg)}
+.flashcard-front,.flashcard-back{position:absolute;width:100%;min-height:160px;border-radius:16px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;text-align:center}
+.flashcard-front{background:var(--milk);border:1.5px solid var(--border)}
+.flashcard-back{background:var(--caramel);color:white;transform:rotateY(180deg)}
+.flashcard-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;opacity:.6;margin-bottom:8px}
+.flashcard-text{font-family:'Playfair Display',serif;font-size:16px;line-height:1.5;font-weight:600}
+.flashcard-back .flashcard-label{color:rgba(255,255,255,0.7)}
+.flashcard-back .flashcard-text{color:white}
+.fc-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:1rem}
+.fc-counter{font-size:13px;color:var(--roast);opacity:.7}
+/* Practice */
+.practice-result{border-radius:10px;padding:12px 16px;margin-top:12px;font-size:14px;line-height:1.5}
+.practice-correct{background:#D5F5E3;color:var(--pass);border:1px solid #A9DFBF}
+.practice-incorrect{background:#FDECEA;color:var(--err);border:1px solid #F5B7B1}
+/* Modal overlay */
+.modal-overlay{position:fixed;inset:0;background:rgba(44,24,16,0.5);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto}
+.modal-box{background:var(--milk);border-radius:16px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(44,24,16,0.2);margin:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--milk);z-index:1}
+.modal-body{padding:1.5rem}
+.modal-close{background:var(--cream);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--espresso)}
+/* Rec cards */
+.rec-group{margin-bottom:1.25rem}
+.rec-group-title{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--caramel);margin-bottom:8px}
+.rec-items{display:flex;flex-wrap:wrap;gap:6px}
+.rec-item{background:var(--cream);border-radius:8px;padding:6px 12px;font-size:13px;color:var(--espresso);font-weight:600}
+/* Admin notes */
+.notes-area{width:100%;min-height:70px;font-size:13px;padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--foam);font-family:'Lato',sans-serif;resize:vertical}
+/* Loading / empty states */
+.state-box{text-align:center;padding:2.5rem 1rem;color:var(--roast)}
+.state-icon{font-size:36px;margin-bottom:12px}
+.state-text{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--espresso)}
+.state-sub{font-size:13px;opacity:.7}
+@media(max-width:480px){
+  .detail-grid{grid-template-columns:1fr}
+  .match-row{flex-direction:column;align-items:stretch}
+  .match-item{min-width:unset}
+  .admin-table{display:block;overflow-x:auto}
+  .nav-row{flex-direction:column}
+  .search-row select{width:100%}
+  .home-grid{grid-template-columns:1fr}
+  .stat-row{grid-template-columns:repeat(3,1fr);gap:6px}
+  .stat-num{font-size:22px}
+}
 </style>
 </head>
 <body>
-<div class="app">
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef} = React;
 
-<!-- START SCREEN -->
-<div id="screen-start" class="screen active">
-  <div class="brand-header">
-    <div class="brand-logo">☕ Employee Training</div>
-    <div class="brand-title">Neverland Coffee Bar</div>
-    <div class="brand-sub">Menu Knowledge &amp; Customer Service Test</div>
-  </div>
-  <div class="card">
-    <div class="section-title">Welcome</div>
-    <p style="font-size:14px;color:var(--roast);margin-bottom:1.5rem;line-height:1.6">This test covers Neverland's menu, allergen awareness, and customer service. 30 questions — you need 26/30 (87%) to pass.</p>
-    <label>Your Full Name *</label>
-    <input type="text" id="emp-name" placeholder="First and Last Name"/>
-    <label>Position (optional)</label>
-    <select id="emp-pos">
-      <option value="">Select your position</option>
-      <option>FOH</option><option>Barista</option><option>Supervisor</option><option>BOH</option><option>Manager</option><option>Other</option>
-    </select>
-    <button class="btn btn-primary" onclick="startTest()">Begin Test →</button>
-    <button class="btn btn-secondary" style="margin-top:8px;font-size:12px" onclick="showAdminLogin()">Manager / Admin Login</button>
-  </div>
-</div>
+// ── CONFIG ───────────────────────────────────────────────────────────────────
+const ADMIN_PASSWORD = "NeverlandAdmin2025";
+const PASSING_SCORE = 26;
+const TOTAL_Q = 30;
+const POSITIONS = ["FOH","Barista","Supervisor","BOH","Manager","Other"];
+const STORAGE_KEY = "neverland_v3_submissions";
 
-<!-- ADMIN LOGIN -->
-<div id="screen-adminlogin" class="screen">
-  <div class="brand-header">
-    <div class="brand-logo">☕ Employee Training</div>
-    <div class="brand-title">Neverland Coffee Bar</div>
-  </div>
-  <div class="card">
-    <div class="section-title">Admin Login</div>
-    <label>Admin Password</label>
-    <input type="password" id="admin-pw" placeholder="Enter password"/>
-    <p id="admin-err" style="color:var(--err);font-size:13px;margin-bottom:8px;display:none">Incorrect password.</p>
-    <div class="nav-row">
-      <button class="btn btn-secondary" onclick="showScreen('screen-start')">← Back</button>
-      <button class="btn btn-primary" onclick="adminLogin()">Enter Dashboard →</button>
-    </div>
-  </div>
-</div>
-
-<!-- TEST SCREEN -->
-<div id="screen-test" class="screen">
-  <div class="brand-header">
-    <div class="brand-logo">☕ Employee Training</div>
-    <div class="brand-title">Neverland Coffee Bar</div>
-  </div>
-  <div class="card">
-    <div class="progress-wrap"><div class="progress-fill" id="progress-fill" style="width:3%"></div></div>
-    <div class="progress-label" id="progress-label">Question 1 of 30</div>
-    <div class="badge" id="q-section-badge">Section A</div>
-    <div class="q-num" id="q-num">Question 1 of 30</div>
-    <div class="q-text" id="q-text"></div>
-    <div id="q-scenario" class="q-scenario hidden"></div>
-    <div id="q-options"></div>
-    <div class="nav-row">
-      <button class="btn btn-secondary" id="btn-prev" onclick="prevQ()">← Back</button>
-      <button class="btn btn-primary" id="btn-next" onclick="nextQ()">Next →</button>
-    </div>
-  </div>
-</div>
-
-<!-- RESULT SCREEN -->
-<div id="screen-result" class="screen">
-  <div class="brand-header">
-    <div class="brand-logo">☕ Employee Training</div>
-    <div class="brand-title">Neverland Coffee Bar</div>
-  </div>
-  <div class="card" style="text-align:center">
-    <div id="result-meta" style="font-size:14px;color:var(--roast);margin-bottom:.5rem"></div>
-    <div class="result-score" id="result-score"></div>
-    <div class="result-pct" id="result-pct"></div>
-    <div style="margin-bottom:1.5rem"><span class="result-badge" id="result-badge"></span></div>
-    <div id="result-msg" style="border-radius:12px;padding:1rem;font-size:15px;line-height:1.6"></div>
-    <button class="btn btn-secondary" style="margin-top:1rem" onclick="showScreen('screen-start')">Take Test Again</button>
-  </div>
-</div>
-
-<!-- ADMIN DASHBOARD -->
-<div id="screen-admin" class="screen">
-  <div class="brand-header">
-    <div class="brand-logo">☕ Employee Training</div>
-    <div class="brand-title">Neverland Coffee Bar</div>
-  </div>
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:1rem">
-      <div class="section-title" style="margin:0">Admin Dashboard</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary" style="width:auto;margin:0;font-size:12px;padding:8px 12px" onclick="exportCSV()">Export CSV</button>
-        <button class="btn btn-secondary" style="width:auto;margin:0;font-size:12px;padding:8px 12px" onclick="showScreen('screen-start')">← Exit</button>
-      </div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Total</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-passed" style="color:var(--pass)">0</div><div class="stat-lbl">Passed</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-avg">0</div><div class="stat-lbl">Avg Score</div></div>
-    </div>
-    <input type="text" id="admin-search" placeholder="Search by name…" oninput="renderAdmin()" style="margin-bottom:.5rem"/>
-    <div id="admin-table-wrap"></div>
-  </div>
-</div>
-
-</div>
-
-<script>
-const ADMIN_PW = "NeverlandAdmin2025";
-const PASS_SCORE = 26;
-const STORAGE_KEY = "neverland_v2";
-
-const MC = [
-  {id:1,q:"What egg styles can customers choose from?",opts:["Sunny side up, scrambled, over medium, boiled, or egg whites","Sunny side up, over easy, over medium, hard fried, scrambled, boiled, or egg whites","Sunny side up, over easy, poached, boiled, or egg whites","Scrambled, over easy, over hard, boiled, or egg whites"],a:1},
-  {id:2,q:"How much extra are egg whites?",opts:["$0.50","$1.00","$1.50","$2.00"],a:1},
-  {id:3,q:"What comes in the Truffle Croissant?",opts:["Mushrooms, sweet onions, truffle oil, mozzarella, and arugula","Mushrooms, sweet onions, truffle oil, and mozzarella","Mushrooms, fontina cheese, truffle oil, egg, and chives","Mushrooms, pesto, mozzarella, sweet onions, and tomato"],a:1},
-  {id:4,q:"What comes in the Brunch Croissant?",opts:["Scrambled egg, kosher-style bacon, fontina cheese, avocado, and chives","Scrambled egg, kosher-style bacon, mozzarella, avocado, and arugula","Sunny-side-up egg, kosher-style bacon, fontina cheese, avocado, and chives","Scrambled egg, turkey bacon, goat cheese, avocado, and chives"],a:0},
-  {id:5,q:"What bread is normally used in the Peter's Pan section?",opts:["Gluten-free bread","Sourdough","Challah","Pita"],a:1},
-  {id:6,q:"Which Peter's Pan item includes kefir, feta cheese, arugula, zaatar, kalamata olives, red onions, cherry tomatoes, and olive oil?",opts:["Greek Toast","Caprese Toast","Avocado Toast","Smoked Salmon Bagel"],a:0},
-  {id:7,q:"What are the recommended add-ons for the Avocado Toast?",opts:["Egg, smoked salmon, and kosher-style bacon","Egg, tuna salad, and smoked salmon","Egg, goat cheese, and kosher-style bacon","Smoked salmon, feta, and avocado"],a:0},
-  {id:8,q:"What comes in the Smoked Salmon Bagel?",opts:["Smoked salmon, kefir, capers, onions, and dill","Smoked salmon, cream cheese, capers, onions, and dill","Smoked salmon, kefir, cucumber, cherry tomatoes, and dill","Smoked salmon, goat cheese, capers, onions, and arugula"],a:0},
-  {id:9,q:"What is the correct description of the Grilled Salmon?",opts:["Grilled salmon served with quinoa, arugula, avocado, sesame seeds, 2 eggs, sunflower seeds, and pumpkin seeds","Grilled salmon served with mixed greens, quinoa, kalamata olives, avocado, cherry tomatoes, and house dressing","Grilled salmon served with cucumber, corn, tomato, avocado, arugula, and lemon dressing","Grilled salmon served with mixed greens, spicy mayo, avocado, pumpkin seeds, red onion, cherry tomatoes, and sesame seeds"],a:1},
-  {id:10,q:"What comes in the Healthy Bowl?",opts:["Quinoa, sunflower seeds, pumpkin seeds, smoked salmon, 2 eggs, arugula, avocado, and sesame seeds","Quinoa, smoked salmon, avocado, kalamata olives, cherry tomatoes, goat cheese, and house dressing","Mixed greens, smoked salmon, 2 eggs, avocado, pumpkin seeds, cherry tomatoes, and tahini","Quinoa, tuna salad, 2 eggs, avocado, arugula, pumpkin seeds, and sesame seeds"],a:0},
-  {id:11,q:"A customer has a nut allergy and asks which dressing is safest. What is the best answer?",opts:["Lemon dressing is the safest option, but we still need to inform the kitchen because cross-contamination is possible","Pesto is safe because it is mostly basil and olive oil","Tahini is safe because it does not contain tree nuts","Any dressing is fine as long as the customer only has a mild allergy"],a:0},
-  {id:12,q:"What comes in the Captain Hook Chicken Salad?",opts:["Chicken, avocado, tomato, cucumber, arugula, corn, and house dressing","Chicken, avocado, cherry tomatoes, quinoa, corn, feta, and house dressing","Chicken, cucumber, arugula, apple, pumpkin seeds, and tahini","Chicken, avocado, tomato, cucumber, mixed greens, corn, and pesto"],a:0},
-  {id:13,q:"What is the Perfect Pair Board?",opts:["A board where the guest chooses 2 cheeses, 2 cured meats, and 2 sides","A board with brie, burrata, prosciutto, salami, olives, and pita","A board where the guest chooses 3 cheeses, 2 cured meats, and 1 side","A board with 2 cheeses, 1 cured meat, hummus, pita, and jam"],a:0},
-  {id:14,q:"What comes in the Secret Pita?",opts:["Beef chorizo, sunny-side-up egg, tomato, cilantro, onion, and tahini","Arayes meat, sunny-side-up egg, tomato, cilantro, onion, and aioli","Beef chorizo, boiled egg, tomato, cilantro, onion, and tahini","Beef chorizo, sunny-side-up egg, avocado, tomato, onion, and tahini"],a:0},
-  {id:15,q:"What comes in the Challah Burger?",opts:["Fontina cheese, avocado, egg, kosher-style bacon, and arayes meat","Mozzarella, avocado, egg, kosher-style bacon, and arayes meat","Fontina cheese, avocado, egg, beef chorizo, and arayes meat","Fontina cheese, tomato, egg, kosher-style bacon, and arayes meat"],a:0},
-  {id:16,q:"What comes in the Arayes Pixie Dust?",opts:["Beef stuffed in crispy pita, served with tahini, olives, and pico","Beef stuffed in challah, served with aioli, olives, and pico","Beef chorizo in crispy pita, served with tahini, tomato, and cilantro","Arayes meat with pita, avocado, egg, tahini, and pico"],a:0},
-  {id:17,q:"Which pizzetta has kalamata olives, mozzarella, feta, red onions, and cherry tomatoes?",opts:["Caprese Ponte","Santorini","Hawaiian Pizza","Mozzarella"],a:1},
-  {id:18,q:"Which focaccia is the dessert/sweet option?",opts:["Brie Focaccia","Strawberry Focaccia","Nutella Focaccia","Sweet Challah Focaccia"],a:2},
-  {id:19,q:"What comes on the Samba Açaí?",opts:["Strawberries, blueberries, granola, coconut shavings, and honey","Strawberries, bananas, granola, coconut shavings, and honey","Strawberries, blueberries, granola, almonds, and agave","Blueberries, bananas, granola, coconut shavings, and honey"],a:0},
-  {id:20,q:"What milk options does Neverland offer?",opts:["Whole milk, half & half, almond milk, coconut milk, soy milk, and oat milk","Whole milk, skim milk, almond milk, coconut milk, soy milk, and oat milk","Whole milk, half & half, almond milk, coconut milk, macadamia milk, and oat milk","Whole milk, almond milk, coconut milk, soy milk, oat milk, and lactose-free milk"],a:0},
+// ── DATA: OFFICIAL TEST ──────────────────────────────────────────────────────
+const MC_Q = [
+  {id:1,question:"What egg styles can customers choose from?",options:["Sunny side up, scrambled, over medium, boiled, or egg whites","Sunny side up, scrambled, over easy, over medium, hard fried, boiled, or egg whites","Sunny side up, over easy, poached, boiled, or egg whites","Scrambled, over easy, over hard, boiled, or egg whites"],correct:1},
+  {id:2,question:"How much extra are egg whites?",options:["$0.50","$1.00","$1.50","$2.00"],correct:1},
+  {id:3,question:"What comes in the Truffle Croissant?",options:["Mushrooms, sweet onions, truffle oil, mozzarella, and arugula","Mushrooms, sweet onions, truffle oil, and mozzarella","Mushrooms, fontina cheese, truffle oil, egg, and chives","Mushrooms, pesto, mozzarella, sweet onions, and tomato"],correct:1},
+  {id:4,question:"What comes in the Brunch Croissant?",options:["Scrambled egg, kosher-style bacon, fontina cheese, avocado, and chives","Scrambled egg, kosher-style bacon, mozzarella, avocado, and arugula","Sunny-side-up egg, kosher-style bacon, fontina cheese, avocado, and chives","Scrambled egg, turkey bacon, goat cheese, avocado, and chives"],correct:0},
+  {id:5,question:"What bread is normally used in the Peter's Pan section?",options:["Gluten-free bread","Sourdough","Challah","Pita"],correct:1},
+  {id:6,question:"Which Peter's Pan item includes kefir, feta cheese, arugula, zaatar, kalamata olives, red onions, cherry tomatoes, and olive oil?",options:["Greek Toast","Caprese Toast","Avocado Toast","Smoked Salmon Bagel"],correct:0},
+  {id:7,question:"What are the recommended add-ons for the Avocado Toast?",options:["Egg, smoked salmon, and kosher-style bacon","Egg, tuna salad, and smoked salmon","Egg, goat cheese, and kosher-style bacon","Smoked salmon, feta, and avocado"],correct:0},
+  {id:8,question:"What comes in the Smoked Salmon Bagel?",options:["Smoked salmon, kefir, capers, onions, and dill","Smoked salmon, cream cheese, capers, onions, and dill","Smoked salmon, kefir, cucumber, cherry tomatoes, and dill","Smoked salmon, goat cheese, capers, onions, and arugula"],correct:0},
+  {id:9,question:"What is the correct description of the Grilled Salmon?",options:["Grilled salmon served with quinoa, arugula, avocado, sesame seeds, 2 eggs, sunflower seeds, and pumpkin seeds","Grilled salmon served with mixed greens, quinoa, kalamata olives, avocado, cherry tomatoes, and house dressing","Grilled salmon served with cucumber, corn, tomato, avocado, arugula, and lemon dressing","Grilled salmon served with mixed greens, spicy mayo, avocado, pumpkin seeds, red onion, cherry tomatoes, and sesame seeds"],correct:1},
+  {id:10,question:"What comes in the Healthy Bowl?",options:["Quinoa, sunflower seeds, pumpkin seeds, smoked salmon, 2 eggs, arugula, avocado, and sesame seeds","Quinoa, smoked salmon, avocado, kalamata olives, cherry tomatoes, goat cheese, and house dressing","Mixed greens, smoked salmon, 2 eggs, avocado, pumpkin seeds, cherry tomatoes, and tahini","Quinoa, tuna salad, 2 eggs, avocado, arugula, pumpkin seeds, and sesame seeds"],correct:0},
+  {id:11,question:"A customer has a nut allergy and asks which dressing is safest to choose. What is the best answer?",options:["Lemon dressing is the safest dressing option, but we still need to inform the kitchen because cross-contamination is possible","Pesto is safe because it is mostly basil and olive oil","Tahini is safe because it does not contain tree nuts","Any dressing is fine as long as the customer only has a mild allergy"],correct:0},
+  {id:12,question:"What comes in the Captain Hook Chicken Salad?",options:["Chicken, avocado, tomato, cucumber, arugula, corn, and house dressing","Chicken, avocado, cherry tomatoes, quinoa, corn, feta, and house dressing","Chicken, cucumber, arugula, apple, pumpkin seeds, and tahini","Chicken, avocado, tomato, cucumber, mixed greens, corn, and pesto"],correct:0},
+  {id:13,question:"What is the Perfect Pair Board?",options:["A board where the guest chooses 2 cheeses, 2 cured meats, and 2 sides","A board with brie, burrata, prosciutto, salami, olives, and pita","A board where the guest chooses 3 cheeses, 2 cured meats, and 1 side","A board with 2 cheeses, 1 cured meat, hummus, pita, and jam"],correct:0},
+  {id:14,question:"What comes in the Secret Pita?",options:["Beef chorizo, sunny-side-up egg, tomato, cilantro, onion, and tahini","Arayes meat, sunny-side-up egg, tomato, cilantro, onion, and aioli","Beef chorizo, boiled egg, tomato, cilantro, onion, and tahini","Beef chorizo, sunny-side-up egg, avocado, tomato, onion, and tahini"],correct:0},
+  {id:15,question:"What comes in the Challah Burger?",options:["Fontina cheese, avocado, egg, kosher-style bacon, and arayes meat","Mozzarella, avocado, egg, kosher-style bacon, and arayes meat","Fontina cheese, avocado, egg, beef chorizo, and arayes meat","Fontina cheese, tomato, egg, kosher-style bacon, and arayes meat"],correct:0},
+  {id:16,question:"What comes in the Arayes Pixie Dust?",options:["Beef stuffed in crispy pita, served with tahini, olives, and pico","Beef stuffed in challah, served with aioli, olives, and pico","Beef chorizo in crispy pita, served with tahini, tomato, and cilantro","Arayes meat with pita, avocado, egg, tahini, and pico"],correct:0},
+  {id:17,question:"Which pizzetta has kalamata olives, mozzarella, feta, red onions, and cherry tomatoes?",options:["Caprese Ponte","Santorini","Hawaiian Pizza","Mozzarella"],correct:1},
+  {id:18,question:"Which focaccia is the dessert/sweet option?",options:["Brie Focaccia","Strawberry Focaccia","Nutella Focaccia","Sweet Challah Focaccia"],correct:2},
+  {id:19,question:"What comes on the Samba Açaí?",options:["Strawberries, blueberries, granola, coconut shavings, and honey","Strawberries, bananas, granola, coconut shavings, and honey","Strawberries, blueberries, granola, almonds, and agave","Blueberries, bananas, granola, coconut shavings, and honey"],correct:0},
+  {id:20,question:"What milk options does Neverland offer?",options:["Whole milk, half & half, almond milk, coconut milk, soy milk, and oat milk","Whole milk, skim milk, almond milk, coconut milk, soy milk, and oat milk","Whole milk, half & half, almond milk, coconut milk, macadamia milk, and oat milk","Whole milk, almond milk, coconut milk, soy milk, oat milk, and lactose-free milk"],correct:0},
 ];
 
-const MATCH_DESCS = [
+const MATCH_OPTS = [
   {id:"A",text:"Sweet iced matcha with 100% organic matcha ice cubes"},
   {id:"B",text:"Roasted coffee and cocoa beans blended with sweet milk and secret recipe"},
   {id:"C",text:"Lemonade and mint slushie"},
   {id:"D",text:"Agave waffle with brie cheese, almonds, and honey"},
   {id:"E",text:"Green tea, mint, lemon, and passion fruit"},
 ];
-const MATCH = [
-  {id:21,item:"Neverland Iced Coffee",a:"B"},
-  {id:22,item:"Iced Matcha",a:"A"},
-  {id:23,item:"Lemonana",a:"C"},
-  {id:24,item:"Melted Brie Waffle",a:"D"},
-  {id:25,item:"Miami Iced Tea",a:"E"},
+const MATCH_Q = [
+  {id:21,item:"Neverland Iced Coffee",correct:"B"},
+  {id:22,item:"Iced Matcha",correct:"A"},
+  {id:23,item:"Lemonana",correct:"C"},
+  {id:24,item:"Melted Brie Waffle",correct:"D"},
+  {id:25,item:"Miami Iced Tea",correct:"E"},
 ];
-const SA = [
-  {id:26,scenario:'"I\'ve never been here before. What should I get?"',prompt:"Write a strong recommendation using one food item and one drink. Explain why and use confident, guest-friendly language.",kw:[["brunch croissant","avocado toast","truffle croissant","healthy bowl","acai","açaí","grilled salmon"],["iced coffee","matcha","latte","lemonade","lemonana"]]},
-  {id:27,scenario:'"I have a severe nut allergy. What can I eat?"',prompt:"Address cross-contamination, what you will do to help, and how the order will be handled.",kw:[["cross-contamination","cross contamination","cannot guarantee","can't guarantee","not 100%"],["inform","notify","tell","let"],["kitchen","supervisor","manager"]]},
-  {id:28,scenario:"A table is upset because they see an 18% service charge on the check.",prompt:"Stay professional, explain the charge, and offer next steps.",kw:[["18%","service charge","service fee"],["menu","listed","stated","table service"],["calm","understand","apologize","manager","help"]]},
-  {id:29,scenario:"A customer wants something healthy, high-protein, and not too heavy.",prompt:"Recommend a specific menu item and explain why it fits their needs.",kw:[["healthy bowl","grilled salmon","captain hook","chicken salad"],["protein","quinoa","salmon","chicken","eggs"]]},
-  {id:30,scenario:"A customer is deciding between a basic coffee and a specialty drink.",prompt:"Write your upsell pitch. Recommend a specific specialty drink and use friendly, non-pushy language.",kw:[["neverland iced coffee","tiramisu","peanut butter","strawberry matcha","golden coffee","specialty"],["special","signature","unique","known for","favorite","recommend"]]},
+const SA_Q = [
+  {id:26,scenario:'"I\'ve never been here before. What should I get?"',prompt:"Write a strong recommendation using one food item and one drink. Explain why and use confident guest-friendly language.",rubric:"Recommends one food item and one drink, explains why the items are good, uses confident guest-friendly language.",keywords:[["brunch croissant","avocado toast","truffle croissant","healthy bowl","acai","açaí","grilled salmon"],["iced coffee","matcha","latte","lemonade","lemonana","tiramisu"]]},
+  {id:27,scenario:'"I have a severe nut allergy. What can I eat?"',prompt:"Write your response. Address cross-contamination, what you will do, and how the order will be handled.",rubric:"Thanks the customer, mentions cross-contamination is possible, does not promise 100% allergen-free, says they will inform kitchen and supervisor.",keywords:[["cross-contamination","cross contamination","cannot guarantee","can't guarantee","not 100%"],["inform","notify","tell","let"],["kitchen","supervisor","manager"]]},
+  {id:28,scenario:"A table is upset because they see a 15% service charge on the check.",prompt:"Write how you would handle this situation. Stay professional, explain the charge, and offer next steps.",rubric:"Stays calm, explains 15% service charge applies to table service and is listed on the menu, says it supports the team, offers to get manager.",keywords:[["15%","service charge","service fee"],["menu","listed","stated","table service"],["calm","understand","apologize","manager","help"]]},
+  {id:29,scenario:"A customer wants something healthy, high-protein, and not too heavy. What item would you recommend and why?",prompt:"Recommend a specific menu item and explain why it fits their needs.",rubric:"Recommends Healthy Bowl, Grilled Salmon, or Captain Hook Chicken Salad and explains why it is healthy and high-protein.",keywords:[["healthy bowl","grilled salmon","captain hook","chicken salad"],["protein","quinoa","salmon","chicken","eggs"]]},
+  {id:30,scenario:"A customer is deciding between a basic coffee and a specialty drink. How would you upsell them?",prompt:"Write your upsell pitch. Recommend a specific specialty drink, explain what makes it special, and use friendly non-pushy language.",rubric:"Recommends a specific specialty drink, explains what makes it special, uses friendly confident upselling language.",keywords:[["neverland iced coffee","tiramisu","peanut butter","strawberry matcha","golden coffee","specialty"],["special","signature","unique","known for","favorite","cold brew","recommend"]]},
 ];
 
-let empName="", empPos="", curQ=0, answers={};
+// ── DATA: FLASHCARDS ──────────────────────────────────────────────────────────
+const FLASHCARDS = [
+  {front:"What egg styles can customers choose from?",back:"Sunny side up, scrambled, over easy, over medium, hard fried, boiled, or egg whites."},
+  {front:"How much extra are egg whites?",back:"$1.00 extra."},
+  {front:"What comes in the Brunch Croissant?",back:"Scrambled egg, kosher-style bacon, fontina cheese, avocado, and chives."},
+  {front:"What comes in the Truffle Croissant?",back:"Mushrooms, sweet onions, truffle oil, and mozzarella."},
+  {front:"What bread is normally used in the Peter's Pan section?",back:"Sourdough."},
+  {front:"Which Peter's Pan item has kefir, feta cheese, arugula, zaatar, kalamata olives, red onions, cherry tomatoes, and olive oil?",back:"Greek Toast."},
+  {front:"What are the recommended add-ons for Avocado Toast?",back:"Egg, smoked salmon, and kosher-style bacon."},
+  {front:"What comes in the Smoked Salmon Bagel?",back:"Smoked salmon, kefir, capers, onions, and dill."},
+  {front:"What comes in the Grilled Salmon?",back:"Grilled salmon with mixed greens, quinoa, kalamata olives, avocado, cherry tomatoes, and house dressing."},
+  {front:"What comes in the Healthy Bowl?",back:"Quinoa, sunflower seeds, pumpkin seeds, smoked salmon, 2 eggs, arugula, avocado, and sesame seeds."},
+  {front:"What dressing is safest for a nut allergy (from tested options)?",back:"Lemon dressing — but the kitchen and supervisor must still be informed because cross-contamination is possible."},
+  {front:"What comes in the Captain Hook Chicken Salad?",back:"Chicken, avocado, tomato, cucumber, arugula, corn, and house dressing."},
+  {front:"What is the Perfect Pair Board?",back:"A board where the guest chooses 2 cheeses, 2 cured meats, and 2 sides."},
+  {front:"What comes in the Secret Pita?",back:"Beef chorizo, sunny-side-up egg, tomato, cilantro, onion, and tahini."},
+  {front:"What comes in the Challah Burger?",back:"Fontina cheese, avocado, egg, kosher-style bacon, and arayes meat."},
+  {front:"What comes in the Arayes Pixie Dust?",back:"Beef stuffed in crispy pita, served with tahini, olives, and pico."},
+  {front:"Which pizzetta has kalamata olives, mozzarella, feta, red onions, and cherry tomatoes?",back:"Santorini Pizzetta."},
+  {front:"Which focaccia is the sweet/dessert option?",back:"Nutella Focaccia."},
+  {front:"What comes on the Samba Açaí?",back:"Strawberries, blueberries, granola, coconut shavings, and honey."},
+  {front:"What milk options does Neverland offer?",back:"Whole milk, half & half, almond milk, coconut milk, soy milk, and oat milk."},
+  {front:"What is the Neverland Iced Coffee?",back:"Roasted coffee and cocoa beans blended with sweet milk and a secret recipe."},
+  {front:"What is Lemonana?",back:"A lemonade and mint slushie."},
+  {front:"What is Miami Iced Tea?",back:"Green tea, mint, lemon, and passion fruit."},
+  {front:"What should employees say for a severe nut allergy?",back:"Thank the guest, explain cross-contamination is always possible, never guarantee allergen-free, inform the kitchen and supervisor, and mark the order clearly."},
+  {front:"What is the passing score for the official test?",back:"26 out of 30 (87%) or higher."},
+  {front:"What should employees say about the 15% service charge?",back:"'For table service, our menu states that a 15% service charge is included on table orders. This supports the service team. I'm happy to answer questions or get a manager.'"},
+];
 
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+// ── DATA: PRACTICE QUESTIONS ──────────────────────────────────────────────────
+const PRACTICE_Q = [
+  {q:"What comes in the Truffle Croissant?",options:["Mushrooms, pesto, mozzarella","Mushrooms, sweet onions, truffle oil, and mozzarella","Fontina cheese, mushrooms, arugula","Truffle oil, egg, chives, fontina"],correct:1,explain:"The Truffle Croissant contains mushrooms, sweet onions, truffle oil, and mozzarella."},
+  {q:"What bread is normally used in the Peter's Pan section?",options:["Challah","Pita","Sourdough","Gluten-free"],correct:2,explain:"Peter's Pan items use sourdough as the standard bread, with gluten-free or mixed greens available as substitutes."},
+  {q:"Egg whites cost how much extra?",options:["$0.50","$2.00","$1.50","$1.00"],correct:3,explain:"Egg whites are $1.00 extra."},
+  {q:"Which item is in the Salads & Bowls category?",options:["Truffle Croissant","Nutella Focaccia","Healthy Bowl","Secret Pita"],correct:2,explain:"The Healthy Bowl is in the Salads & Bowls category, featuring quinoa, smoked salmon, eggs, and seeds."},
+  {q:"A guest mentions a peanut allergy. What should you do first?",options:["Tell them not to worry","Promise everything is safe","Thank them, inform the kitchen and supervisor, and mark the order","Suggest they avoid all food"],correct:2,explain:"Always thank the guest, inform the kitchen and a supervisor, and clearly mark the allergy on the order. Never guarantee anything is 100% allergen-free."},
+  {q:"Which pizzetta has kalamata olives, mozzarella, feta, red onions, and cherry tomatoes?",options:["Caprese Ponte","Hawaiian","Mozzarella","Santorini"],correct:3,explain:"The Santorini Pizzetta has kalamata olives, mozzarella, feta, red onions, and cherry tomatoes."},
+  {q:"What is the Neverland Iced Coffee?",options:["Cold brew with cream","Roasted coffee and cocoa beans blended with sweet milk and secret recipe","Espresso over ice","Iced latte with vanilla"],correct:1,explain:"The Neverland Iced Coffee is made with roasted coffee and cocoa beans blended with sweet milk and a secret recipe. It's one of Neverland's signature drinks."},
+  {q:"What is Lemonana?",options:["Iced green tea","Passion fruit lemonade","Lemonade and mint slushie","Sparkling limeade"],correct:2,explain:"Lemonana is a refreshing lemonade and mint slushie."},
+  {q:"What comes on the Samba Açaí?",options:["Strawberries, bananas, granola, coconut, honey","Strawberries, blueberries, granola, coconut shavings, and honey","Blueberries, almonds, agave, granola","Mango, coconut, granola, honey"],correct:1,explain:"The Samba Açaí is topped with strawberries, blueberries, granola, coconut shavings, and honey."},
+  {q:"A customer asks for something healthy, high-protein, not too heavy. Best recommendation?",options:["Challah Burger","Nutella Focaccia","Healthy Bowl","Kids Special"],correct:2,explain:"The Healthy Bowl has quinoa, smoked salmon, 2 eggs, arugula, avocado, and seeds — high protein, nutritious, and not too heavy."},
+  {q:"What comes in the Smoked Salmon Bagel?",options:["Cream cheese, capers, onions, dill","Smoked salmon, kefir, capers, onions, and dill","Goat cheese, arugula, capers","Salmon, avocado, cucumber, dill"],correct:1,explain:"The Smoked Salmon Bagel has smoked salmon, kefir, capers, onions, and dill."},
+  {q:"How should you handle a guest upset about the 15% service charge?",options:["Tell them it's not your problem","Argue it's fair","Stay calm, explain it applies to table service and is on the menu, offer to get a manager","Remove the charge immediately"],correct:2,explain:"Stay calm, explain the 15% service charge is listed on the menu for table service and supports the team. Offer to get a manager if needed."},
+  {q:"What does Miami Iced Tea contain?",options:["Black tea, lemon, mint","Green tea, mint, lemon, and passion fruit","Hibiscus tea, honey, lime","Chamomile, lemon, ginger"],correct:1,explain:"Miami Iced Tea is green tea with mint, lemon, and passion fruit."},
+  {q:"Which focaccia is the sweet/dessert option?",options:["Brie Focaccia","Meat Lover's Focaccia","Triple Mushroom Truffle","Nutella Focaccia"],correct:3,explain:"The Nutella Focaccia is the sweet/dessert focaccia option."},
+  {q:"What is the Perfect Pair Board?",options:["A fixed board with brie and salami","A board with 3 cheeses and 1 meat","A board where guests choose 2 cheeses, 2 cured meats, and 2 sides","A hummus and pita platter"],correct:2,explain:"The Perfect Pair Board lets guests customize with 2 cheeses, 2 cured meats, and 2 sides — great for sharing."},
+];
 
-function startTest(){
-  empName=document.getElementById('emp-name').value.trim();
-  if(!empName){alert('Please enter your name.');return;}
-  empPos=document.getElementById('emp-pos').value;
-  curQ=0; answers={};
-  renderQ();
-  showScreen('screen-test');
-}
-
-function showAdminLogin(){showScreen('screen-adminlogin');}
-function adminLogin(){
-  const pw=document.getElementById('admin-pw').value;
-  if(pw===ADMIN_PW){showScreen('screen-admin');renderAdmin();}
-  else{const e=document.getElementById('admin-err');e.style.display='block';setTimeout(()=>e.style.display='none',2000);}
-}
-
-function getQ(i){
-  if(i<20)return{type:'mc',q:MC[i]};
-  if(i<25)return{type:'match',q:MATCH[i-20]};
-  return{type:'sa',q:SA[i-25]};
-}
-
-function renderQ(){
-  const {type,q}=getQ(curQ);
-  const pct=Math.round(((curQ+1)/30)*100);
-  document.getElementById('progress-fill').style.width=pct+'%';
-  document.getElementById('progress-label').textContent='Question '+(curQ+1)+' of 30';
-  document.getElementById('q-num').textContent='Question '+q.id+' of 30';
-  const badges=['Section A — Multiple Choice','Section B — Matching','Section C — Customer Service'];
-  document.getElementById('q-section-badge').textContent=curQ<20?badges[0]:curQ<25?badges[1]:badges[2];
-  document.getElementById('btn-prev').disabled=curQ===0;
-  document.getElementById('btn-next').textContent=curQ===29?'Review & Submit →':'Next →';
-
-  const scenario=document.getElementById('q-scenario');
-  const opts=document.getElementById('q-options');
-  const qtext=document.getElementById('q-text');
-
-  scenario.classList.add('hidden');
-  opts.innerHTML='';
-
-  if(type==='mc'){
-    qtext.textContent=q.q;
-    q.opts.forEach((opt,i)=>{
-      const btn=document.createElement('button');
-      btn.className='option'+(answers['q'+q.id]===i?' selected':'');
-      btn.innerHTML='<span class="option-letter">'+String.fromCharCode(65+i)+'</span>'+opt;
-      btn.onclick=()=>{answers['q'+q.id]=i;renderQ();};
-      opts.appendChild(btn);
-    });
-  } else if(type==='match'){
-    qtext.textContent='Match the item to its correct description.';
-    let descHTML='<div class="descriptions">';
-    MATCH_DESCS.forEach(d=>{descHTML+='<div class="desc-item"><span class="desc-key">'+d.id+'.</span><span>'+d.text+'</span></div>';});
-    descHTML+='</div>';
-    const row=document.createElement('div');
-    row.className='match-row';
-    row.innerHTML=descHTML+'<div class="match-label">'+q.item+'</div>';
-    const sel=document.createElement('select');
-    sel.style.flex='1';sel.style.marginBottom='0';
-    sel.innerHTML='<option value="">Select description…</option>';
-    MATCH_DESCS.forEach(d=>{sel.innerHTML+='<option value="'+d.id+'"'+(answers['q'+q.id]===d.id?' selected':'')+'>'+d.id+' — '+d.text.slice(0,40)+'…</option>';});
-    sel.onchange=()=>{answers['q'+q.id]=sel.value;};
-    row.appendChild(sel);
-    opts.appendChild(row);
-  } else {
-    scenario.textContent=q.scenario;
-    scenario.classList.remove('hidden');
-    qtext.textContent=q.prompt;
-    const ta=document.createElement('textarea');
-    ta.placeholder='Type your response here…';
-    ta.value=answers['q'+q.id]||'';
-    ta.onchange=()=>{answers['q'+q.id]=ta.value;};
-    opts.appendChild(ta);
-  }
-}
-
-function prevQ(){if(curQ>0){curQ--;renderQ();}}
-function nextQ(){
-  if(curQ===29){submitTest();return;}
-  curQ++;renderQ();
-}
-
-function scoreSA(ans,q){
-  if(!ans||ans.trim().length<10)return 0;
-  const l=ans.toLowerCase();
-  const matched=q.kw.filter(g=>g.some(k=>l.includes(k)));
-  return matched.length>=Math.ceil(q.kw.length*0.5)?1:0;
-}
-
-function submitTest(){
-  let score=0;
-  const breakdown={};
-  MC.forEach(q=>{const a=answers['q'+q.id];const ok=a===q.a;breakdown['q'+q.id]={a,ok,ca:q.a};if(ok)score++;});
-  MATCH.forEach(q=>{const a=answers['q'+q.id];const ok=a===q.a;breakdown['q'+q.id]={a,ok,ca:q.a};if(ok)score++;});
-  SA.forEach(q=>{const a=answers['q'+q.id]||'';const s=scoreSA(a,q);breakdown['q'+q.id]={a,ok:s===1};score+=s;});
-
-  const result={id:Date.now()+'_'+Math.random().toString(36).slice(2,6),name:empName,pos:empPos,date:new Date().toISOString(),score,breakdown};
-  const subs=loadSubs();subs.unshift(result);saveSubs(subs);
-
-  const passed=score>=PASS_SCORE;
-  const pct=Math.round((score/30)*100);
-  document.getElementById('result-meta').textContent=empName+' · '+(empPos||'—')+' · '+new Date().toLocaleString();
-  document.getElementById('result-score').textContent=score+'/30';
-  document.getElementById('result-pct').textContent=pct+'%';
-  const badge=document.getElementById('result-badge');
-  badge.textContent=passed?'✓ Passed':'✗ Did Not Pass';
-  badge.className='result-badge '+(passed?'pass':'fail');
-  const msg=document.getElementById('result-msg');
-  msg.style.background=passed?'#D5F5E3':'#FDECEA';
-  msg.style.color=passed?'var(--pass)':'var(--err)';
-  msg.textContent=passed?'Congratulations, you passed the Neverland Menu & Service Test!':'Please review the menu and retake the test before working full service.';
-  showScreen('screen-result');
-}
-
-function loadSubs(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function loadSubs(){try{const r=localStorage.getItem(STORAGE_KEY);return r?JSON.parse(r):[];}catch{return[];}}
 function saveSubs(s){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s));}catch{}}
 
-function renderAdmin(){
-  const subs=loadSubs();
-  const search=(document.getElementById('admin-search').value||'').toLowerCase();
-  const filtered=subs.filter(s=>s.name.toLowerCase().includes(search));
-  const passed=subs.filter(s=>s.score>=PASS_SCORE).length;
-  const avg=subs.length?Math.round(subs.reduce((a,s)=>a+s.score,0)/subs.length):0;
-  document.getElementById('stat-total').textContent=subs.length;
-  document.getElementById('stat-passed').textContent=passed;
-  document.getElementById('stat-avg').textContent=avg;
-  let html='<table><thead><tr><th>Name</th><th>Position</th><th>Date</th><th>Score</th><th>Result</th></tr></thead><tbody>';
-  if(filtered.length===0)html+='<tr><td colspan="5" style="text-align:center;color:var(--roast);padding:1.5rem">No submissions yet.</td></tr>';
-  filtered.forEach(s=>{
-    const p=s.score>=PASS_SCORE;
-    html+='<tr><td style="font-weight:700">'+s.name+'</td><td>'+(s.pos||'—')+'</td><td style="font-size:12px">'+new Date(s.date).toLocaleString()+'</td><td style="font-weight:700">'+s.score+'/30 ('+Math.round((s.score/30)*100)+'%)</td><td><span class="tag '+(p?'pass':'fail')+'">'+(p?'Passed':'Not Passed')+'</span></td></tr>';
-  });
-  html+='</tbody></table>';
-  document.getElementById('admin-table-wrap').innerHTML=html;
+// ── SCORING ───────────────────────────────────────────────────────────────────
+function scoreShortAnswer(answer,q){
+  if(!answer||answer.trim().length<10)return 0;
+  const lower=answer.toLowerCase();
+  const matched=q.keywords.filter(g=>g.some(kw=>lower.includes(kw)));
+  return matched.length>=Math.ceil(q.keywords.length*0.5)?1:0;
+}
+function gradeSubmission(answers){
+  let score=0;const breakdown={};
+  MC_Q.forEach(q=>{const a=answers[`q${q.id}`];const ok=a===q.correct;breakdown[`q${q.id}`]={answer:a,correct:ok,correctAnswer:q.correct};if(ok)score++;});
+  MATCH_Q.forEach(q=>{const a=answers[`q${q.id}`];const ok=a===q.correct;breakdown[`q${q.id}`]={answer:a,correct:ok,correctAnswer:q.correct};if(ok)score++;});
+  SA_Q.forEach(q=>{const a=answers[`q${q.id}`]||"";const auto=scoreShortAnswer(a,q);breakdown[`q${q.id}`]={answer:a,correct:auto===1,autoScore:auto,manualOverride:null};score+=auto;});
+  return{score,breakdown};
 }
 
-function exportCSV(){
-  const subs=loadSubs();
-  const rows=[['Name','Position','Date','Score','Percentage','Result'],...subs.map(s=>[s.name,s.pos||'',new Date(s.date).toLocaleString(),s.score,Math.round((s.score/30)*100)+'%',s.score>=PASS_SCORE?'Passed':'Did Not Pass'])];
-  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='neverland_results.csv';a.click();
+// ── BRAND HEADER ──────────────────────────────────────────────────────────────
+function BrandHeader({onHome}){
+  return(
+    <div className="brand-header" style={{cursor:onHome?"pointer":"default"}} onClick={onHome}>
+      <div className="brand-logo">☕ Employee Training</div>
+      <div className="brand-title">Neverland Coffee Bar</div>
+      <div className="brand-sub">Menu Knowledge & Customer Service</div>
+    </div>
+  );
 }
+
+// ── HOME SCREEN ───────────────────────────────────────────────────────────────
+function HomeScreen({onNav}){
+  return(
+    <div className="app">
+      <BrandHeader/>
+      <div className="card">
+        <div className="section-title" style={{textAlign:"center",marginBottom:6}}>Welcome</div>
+        <p className="section-sub" style={{textAlign:"center",marginBottom:0}}>Choose where you'd like to start. Study first, then take the official test when you're ready.</p>
+        <div className="home-grid">
+          <div className="home-btn" onClick={()=>onNav("study")}>
+            <div className="home-btn-icon">📚</div>
+            <div className="home-btn-title">Study Center</div>
+            <div className="home-btn-sub">Learn the menu & service</div>
+          </div>
+          <div className="home-btn" onClick={()=>onNav("flashcards")}>
+            <div className="home-btn-icon">🃏</div>
+            <div className="home-btn-title">Flashcards</div>
+            <div className="home-btn-sub">Quick review mode</div>
+          </div>
+          <div className="home-btn" onClick={()=>onNav("practice")}>
+            <div className="home-btn-icon">✏️</div>
+            <div className="home-btn-title">Practice Questions</div>
+            <div className="home-btn-sub">No pressure, instant feedback</div>
+          </div>
+          <div className="home-btn" onClick={()=>onNav("test-start")} style={{borderColor:"var(--caramel)",background:"#FFF8ED"}}>
+            <div className="home-btn-icon">📋</div>
+            <div className="home-btn-title">Official Test</div>
+            <div className="home-btn-sub">30 questions · Scored & saved</div>
+          </div>
+        </div>
+      </div>
+      <div style={{textAlign:"center",marginTop:"0.5rem"}}>
+        <button className="btn btn-secondary" style={{fontSize:12,padding:"8px 16px"}} onClick={()=>onNav("admin-login")}>Manager / Admin Login</button>
+      </div>
+    </div>
+  );
+}
+
+// ── STUDY CENTER ──────────────────────────────────────────────────────────────
+const STUDY_SECTIONS = ["About Neverland","Menu Categories","Recommendations","Allergy & Dietary","Service Charge","Customer Service","Upselling"];
+
+function StudyCenter({onBack,onNav}){
+  const [active,setActive]=useState(0);
+  return(
+    <div className="app">
+      <BrandHeader onHome={onBack}/>
+      <div className="card">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem",flexWrap:"wrap",gap:8}}>
+          <div className="section-title" style={{margin:0}}>📚 Study Center</div>
+          <button className="btn btn-secondary" style={{fontSize:12,padding:"7px 14px"}} onClick={onBack}>← Home</button>
+        </div>
+        <div className="study-nav">
+          {STUDY_SECTIONS.map((s,i)=>(
+            <button key={i} className={`study-nav-btn ${active===i?"active":""}`} onClick={()=>setActive(i)}>{s}</button>
+          ))}
+        </div>
+        {active===0&&<AboutSection/>}
+        {active===1&&<MenuCategoriesSection/>}
+        {active===2&&<RecommendationsSection/>}
+        {active===3&&<AllergySection/>}
+        {active===4&&<ServiceChargeSection/>}
+        {active===5&&<CustomerServiceSection/>}
+        {active===6&&<UpsellSection/>}
+        <div className="nav-row" style={{marginTop:"1.5rem"}}>
+          <button className="btn btn-secondary" onClick={()=>onNav("flashcards")}>🃏 Flashcards</button>
+          <button className="btn btn-primary" onClick={()=>onNav("test-start")}>Take Official Test →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AboutSection(){return(<div className="study-section">
+  <h3>About Neverland</h3>
+  <p>Neverland is not just a coffee shop. It is a brunch, coffee, matcha, lunch, dinner, wine, and experience-driven concept. Guests come for the food, drinks, atmosphere, service, and the Neverland feeling.</p>
+  <h3 style={{marginTop:"1rem"}}>What Employees Should Know</h3>
+  <ul>
+    <li>Neverland is built around hospitality, atmosphere, and experience.</li>
+    <li>Guests may be first-time visitors, regulars, tourists, families, remote workers, or event guests.</li>
+    <li>Guide guests through the menu with confidence — know your items.</li>
+    <li>Know signature drinks, brunch items, healthy options, sweets, and shareable items.</li>
+    <li>The goal is not only to take orders, but to help guests choose the right experience.</li>
+    <li>Every employee represents the Neverland brand.</li>
+  </ul>
+  <div className="study-callout">"You are not just serving food. You are creating a Neverland moment for every guest."</div>
+</div>);}
+
+function MenuCategoriesSection(){
+  const cats=[
+    {name:"Everlasting Brunch",emoji:"🍳",desc:"Breakfast and brunch items such as croissants, eggs, waffles, oatmeal, yogurt, hummus, pita, and bigger breakfast plates.",items:["Truffle Croissant","Brunch Croissant","Break the Fast","Farmers Breakfast","Tinker Bell Waffle","Granola Yogurt","Oatmeal","Hummus & Pita"],note:"Know all egg styles. Egg whites cost $1.00 extra. Know which items are best for first-time guests."},
+    {name:"Peter's Pan",emoji:"🍞",desc:"Toast and bagel section. Normally uses sourdough. Know ingredient details and substitutions.",items:["Avocado Toast","Greek Toast","Caprese Toast","Smoked Salmon Bagel","Tuna Salad Toast"],note:"Can substitute with gluten-free bread or mixed greens when available."},
+    {name:"Salads & Bowls",emoji:"🥗",desc:"Healthy, lighter, or protein-focused options.",items:["Grilled Salmon","Healthy Bowl","Ahi Tuna Salad","Peter's Poke Bowl","Captain Hook Chicken Salad","Healthy Salad","Tuna Salad"],note:""},
+    {name:"Chef's Specials",emoji:"⭐",desc:"Heavier, signature, unique, and shareable food items.",items:["Perfect Pair Board","Golden Tater Tots","Secret Pita","Challah Burger","Arayes Pixie Dust","Camembert Challah"],note:""},
+    {name:"Pizzetta & Focaccia",emoji:"🍕",desc:"Good for lunch, dinner, sharing, and upselling.",items:["Mozzarella Pizzetta","Santorini Pizzetta","Caprese Ponte Pizzetta","Hawaiian Pizza","Nutella Focaccia","Meat Lover's Focaccia","Triple Mushroom Truffle Focaccia"],note:""},
+    {name:"Kids Menu",emoji:"👶",desc:"Kid-friendly items for families.",items:["Kids Special","Milkshake","Grilled Cheese","Waffle & Eggs","Cheesy Pizza","Nuggets & Tater Tots"],note:""},
+    {name:"Sweet O'clock",emoji:"🍓",desc:"Sweet items, desserts, waffles, açaí, and bakery-style items.",items:["Samba Açaí","Melted Brie Waffle","Tinker Bell Waffle","Granola Yogurt","Cookies","Brownie"],note:""},
+    {name:"Drinks",emoji:"☕",desc:"Know the difference between regular coffee, Neverland signatures, matcha, teas, juices, smoothies, and specialty drinks.",items:["Neverland Iced Coffee","Iced Matcha","Strawberry Iced Matcha","Tiramisu Iced Latte","Peanut Butter & Banana Iced Latte","Hot Golden Coffee","Lemonana","Passionana","Miami Iced Tea","Detox Drink","Tropical Greens Cleanse"],note:""},
+  ];
+  return(<div className="study-section">
+    <h3>Menu Categories</h3>
+    {cats.map(c=>(
+      <div key={c.name} className="menu-category">
+        <div className="menu-category-title">{c.emoji} {c.name}</div>
+        <div className="menu-category-desc">{c.desc}</div>
+        <div className="menu-items">{c.items.map(i=><span key={i} className="menu-tag">{i}</span>)}</div>
+        {c.note&&<div style={{fontSize:12,color:"var(--caramel)",marginTop:8,fontWeight:700}}>⚠ {c.note}</div>}
+      </div>
+    ))}
+  </div>);}
+
+function RecommendationsSection(){
+  const recs=[
+    {label:"First-time guest",items:["Brunch Croissant + Neverland Iced Coffee","Avocado Toast + Neverland Iced Coffee","Truffle Croissant + Iced Matcha"]},
+    {label:"Healthy guest",items:["Healthy Bowl","Grilled Salmon","Captain Hook Chicken Salad","Ahi Tuna Salad"]},
+    {label:"Sweet brunch guest",items:["Samba Açaí","Tinker Bell Waffle","Melted Brie Waffle","Strawberry Iced Matcha"]},
+    {label:"Guest who wants something filling",items:["Break the Fast","Farmers Breakfast","Challah Burger","Golden Tater Tots","Arayes Pixie Dust"]},
+    {label:"Guests sharing with friends",items:["Perfect Pair Board","Pizzettas","Focaccias","Camembert Challah"]},
+    {label:"Coffee lover",items:["Neverland Iced Coffee","Tiramisu Iced Latte","Peanut Butter & Banana Iced Latte"]},
+    {label:"Matcha lover",items:["Iced Matcha","Strawberry Iced Matcha"]},
+  ];
+  return(<div className="study-section">
+    <h3>What to Recommend</h3>
+    <p>Know your go-to recommendations for different types of guests. Confidence here builds trust with the guest.</p>
+    {recs.map(r=>(
+      <div key={r.label} className="rec-group">
+        <div className="rec-group-title">{r.label}</div>
+        <div className="rec-items">{r.items.map(i=><span key={i} className="rec-item">{i}</span>)}</div>
+      </div>
+    ))}
+  </div>);}
+
+function AllergySection(){return(<div className="study-section">
+  <h3>Allergy & Dietary Communication</h3>
+  <p style={{color:"var(--err)",fontWeight:700}}>⚠ Never guarantee that any item is 100% allergen-free. Cross-contamination is always possible.</p>
+  <div className="study-callout">"Thank you for letting me know. We do have items with nuts and other allergens, and cross-contamination is always possible. I cannot guarantee that anything is 100% allergen-free, but I will inform the kitchen and a supervisor so we can guide you as safely as possible."</div>
+  <h3 style={{marginTop:"1rem"}}>Rules to Follow</h3>
+  <ul>
+    <li>Always take allergies seriously — treat every allergy as severe.</li>
+    <li>Ask if it is an allergy or a preference.</li>
+    <li>Inform the kitchen immediately.</li>
+    <li>Inform a supervisor or manager.</li>
+    <li>Mark the allergy clearly on the order.</li>
+    <li>Never guess — if unsure, ask a supervisor.</li>
+    <li>Never promise zero cross-contamination.</li>
+  </ul>
+  <div className="study-callout" style={{marginTop:"1rem"}}>Special note: For nut allergies, lemon dressing is the safest dressing option from the options tested — but the kitchen must still be informed because cross-contamination is always possible.</div>
+</div>);}
+
+function ServiceChargeSection(){return(<div className="study-section">
+  <h3>15% Service Charge Communication</h3>
+  <p>Some guests are surprised by the service charge on their check. Stay calm and explain it clearly.</p>
+  <div className="study-callout">"I completely understand. For table service, our menu states that a 15% service charge is included on table orders. This supports the service team. I'm happy to answer any questions, and I can also get a manager for you."</div>
+  <h3 style={{marginTop:"1rem"}}>Rules</h3>
+  <ul>
+    <li>Stay calm — never get defensive.</li>
+    <li>Do not argue or blame the guest.</li>
+    <li>Explain that the 15% service charge is clearly listed on the menu.</li>
+    <li>Explain that it supports the service team.</li>
+    <li>Offer to get a manager if the guest wants further assistance.</li>
+    <li>Never be dismissive of the guest's concern.</li>
+  </ul>
+</div>);}
+
+function CustomerServiceSection(){return(<div className="study-section">
+  <h3>Neverland Customer Service Standards</h3>
+  <ul>
+    <li>Greet guests warmly as soon as they arrive.</li>
+    <li>Make eye contact and smile naturally.</li>
+    <li>Be patient with first-time guests — help them choose.</li>
+    <li>Know the menu well enough to recommend with confidence.</li>
+    <li>Help guests decide — don't just wait for them to order.</li>
+    <li>Repeat orders back to confirm accuracy.</li>
+    <li>Ask about allergies when appropriate.</li>
+    <li>Communicate delays honestly and promptly.</li>
+    <li>Stay calm during complaints — never match the guest's frustration.</li>
+    <li>Involve a supervisor when a situation escalates.</li>
+    <li>Make every guest feel welcome, seen, and cared for.</li>
+    <li>Never argue with a guest.</li>
+    <li>Be professional even when the guest is upset.</li>
+    <li>Ensure guests understand what they are ordering.</li>
+  </ul>
+</div>);}
+
+function UpsellSection(){return(<div className="study-section">
+  <h3>How to Upsell Naturally</h3>
+  <p>Upselling is not pushing — it is helping guests discover something better. The key is to sound genuine, not scripted.</p>
+  <h3 style={{marginTop:"1rem"}}>Example Phrases</h3>
+  <div className="study-callout">"If you like iced coffee, I really recommend our Neverland Iced Coffee. It's one of our signatures — it's not just regular cold brew."</div>
+  <div className="study-callout">"If you like matcha, the Strawberry Iced Matcha is a great choice because it's creamy, sweet, and very popular right now."</div>
+  <div className="study-callout">"Would you like to add egg or smoked salmon to your avocado toast? It makes it a full meal."</div>
+  <div className="study-callout">"If you're sharing, the Perfect Pair Board or a pizzetta would be great for the table."</div>
+  <div className="study-callout">"For something sweet after brunch, the Samba Açaí or Melted Brie Waffle is a great option."</div>
+  <div className="study-callout">"If you want something more unique than a basic latte, the Tiramisu Iced Latte is a great choice — guests love it."</div>
+  <ul style={{marginTop:"1rem"}}>
+    <li>Always recommend specific items — never say "we have a lot of options."</li>
+    <li>Explain WHY the item is good, not just WHAT it is.</li>
+    <li>Use personal language: "I really recommend..." / "Guests love..."</li>
+    <li>Never pressure — suggest and let the guest decide.</li>
+  </ul>
+</div>);}
+
+// ── FLASHCARDS ────────────────────────────────────────────────────────────────
+function FlashcardsScreen({onBack}){
+  const [idx,setIdx]=useState(0);
+  const [flipped,setFlipped]=useState(false);
+  const [shuffled]=useState(()=>[...FLASHCARDS].sort(()=>Math.random()-.5));
+  const card=shuffled[idx];
+  function next(){setFlipped(false);setTimeout(()=>setIdx(i=>(i+1)%shuffled.length),200);}
+  function prev(){setFlipped(false);setTimeout(()=>setIdx(i=>(i-1+shuffled.length)%shuffled.length),200);}
+  return(
+    <div className="app">
+      <BrandHeader onHome={onBack}/>
+      <div className="card">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem"}}>
+          <div className="section-title" style={{margin:0}}>🃏 Flashcards</div>
+          <button className="btn btn-secondary" style={{fontSize:12,padding:"7px 14px"}} onClick={onBack}>← Home</button>
+        </div>
+        <p style={{fontSize:13,color:"var(--roast)",marginBottom:"1rem"}}>Tap the card to reveal the answer. Use arrows to navigate. Cards are shuffled each session.</p>
+        <div className="fc-nav">
+          <button className="btn btn-secondary" style={{padding:"8px 16px"}} onClick={prev}>←</button>
+          <span className="fc-counter">{idx+1} / {shuffled.length}</span>
+          <button className="btn btn-secondary" style={{padding:"8px 16px"}} onClick={next}>→</button>
+        </div>
+        <div className="flashcard-wrap">
+          <div className={`flashcard ${flipped?"flipped":""}`} onClick={()=>setFlipped(f=>!f)}>
+            <div className="flashcard-front">
+              <div className="flashcard-label">Question — tap to flip</div>
+              <div className="flashcard-text">{card.front}</div>
+            </div>
+            <div className="flashcard-back">
+              <div className="flashcard-label">Answer</div>
+              <div className="flashcard-text">{card.back}</div>
+            </div>
+          </div>
+        </div>
+        <div style={{textAlign:"center",marginTop:"0.5rem"}}>
+          <button className="btn btn-primary btn-full" onClick={next}>Next Card →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── PRACTICE QUESTIONS ────────────────────────────────────────────────────────
+function PracticeScreen({onBack}){
+  const [questions]=useState(()=>[...PRACTICE_Q].sort(()=>Math.random()-.5));
+  const [idx,setIdx]=useState(0);
+  const [selected,setSelected]=useState(null);
+  const [showResult,setShowResult]=useState(false);
+  const [score,setScore]=useState(0);
+  const [done,setDone]=useState(false);
+  const q=questions[idx];
+
+  function choose(i){
+    if(showResult)return;
+    setSelected(i);setShowResult(true);
+    if(i===q.correct)setScore(s=>s+1);
+  }
+  function next(){
+    if(idx<questions.length-1){setIdx(i=>i+1);setSelected(null);setShowResult(false);}
+    else setDone(true);
+  }
+  function restart(){setIdx(0);setSelected(null);setShowResult(false);setScore(0);setDone(false);}
+
+  if(done){return(
+    <div className="app">
+      <BrandHeader onHome={onBack}/>
+      <div className="card" style={{textAlign:"center"}}>
+        <div style={{fontSize:36,marginBottom:12}}>✏️</div>
+        <div className="section-title">Practice Complete!</div>
+        <div className="result-score">{score}/{questions.length}</div>
+        <div className="result-pct">{Math.round((score/questions.length)*100)}%</div>
+        <p style={{fontSize:14,color:"var(--roast)",margin:"1rem 0"}}>This was practice mode — results are not saved. Keep studying and take the Official Test when ready!</p>
+        <div className="nav-row">
+          <button className="btn btn-secondary" onClick={restart}>Practice Again</button>
+          <button className="btn btn-primary" onClick={onBack}>← Home</button>
+        </div>
+      </div>
+    </div>
+  );}
+
+  return(
+    <div className="app">
+      <BrandHeader onHome={onBack}/>
+      <div className="card">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem"}}>
+          <div className="section-title" style={{margin:0}}>✏️ Practice</div>
+          <button className="btn btn-secondary" style={{fontSize:12,padding:"7px 14px"}} onClick={onBack}>← Home</button>
+        </div>
+        <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{width:`${((idx+1)/questions.length)*100}%`}}/></div>
+        <div className="progress-label" style={{marginBottom:"1rem"}}>Question {idx+1} of {questions.length} · Score: {score}</div>
+        <div style={{background:"#FFF8F0",borderRadius:10,padding:6,marginBottom:8,fontSize:11,color:"var(--caramel)",fontWeight:700,textAlign:"center",textTransform:"uppercase",letterSpacing:1}}>Practice Mode — Not Saved</div>
+        <div className="q-text">{q.q}</div>
+        {q.options.map((opt,i)=>{
+          let cls="option-btn";
+          if(showResult){if(i===q.correct)cls+=" correct";else if(i===selected&&i!==q.correct)cls+=" incorrect";}
+          else if(selected===i)cls+=" selected";
+          return(
+            <button key={i} className={cls} onClick={()=>choose(i)} disabled={showResult}>
+              <span className="option-letter">{String.fromCharCode(65+i)}</span>{opt}
+            </button>
+          );
+        })}
+        {showResult&&(
+          <div className={`practice-result ${selected===q.correct?"practice-correct":"practice-incorrect"}`}>
+            <strong>{selected===q.correct?"✓ Correct!":"✗ Incorrect"}</strong> — {q.explain}
+          </div>
+        )}
+        {showResult&&(
+          <button className="btn btn-primary btn-full" style={{marginTop:"1rem"}} onClick={next}>
+            {idx<questions.length-1?"Next Question →":"See Results"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── TEST START ────────────────────────────────────────────────────────────────
+function TestStartScreen({onStart,onBack}){
+  const [name,setName]=useState("");
+  const [pos,setPos]=useState("");
+  return(
+    <div className="app">
+      <BrandHeader onHome={onBack}/>
+      <div className="card">
+        <div className="section-title">📋 Official Test</div>
+        <p style={{fontSize:14,color:"var(--roast)",marginBottom:"1.5rem",lineHeight:1.6}}>
+          This is the official 30-question test. Your results will be saved and reviewed by management. You need <strong>26/30 (87%)</strong> to pass.
+        </p>
+        <div style={{marginBottom:"1rem"}}>
+          <label>Your Full Name *</label>
+          <input type="text" placeholder="First and Last Name" value={name} onChange={e=>setName(e.target.value)} onKeyDown={e=>e.key==="Enter"&&name.trim()&&onStart(name.trim(),pos)}/>
+        </div>
+        <div style={{marginBottom:"1.5rem"}}>
+          <label>Position (optional)</label>
+          <select value={pos} onChange={e=>setPos(e.target.value)}>
+            <option value="">Select your position</option>
+            {POSITIONS.map(p=><option key={p} value={p}>{p}</option>)}
+          </select>
+        </div>
+        <button className="btn btn-primary btn-full" disabled={!name.trim()} onClick={()=>onStart(name.trim(),pos)}>Begin Official Test →</button>
+      </div>
+      <div style={{textAlign:"center"}}>
+        <button className="btn btn-secondary" style={{fontSize:12,padding:"8px 16px"}} onClick={onBack}>← Back to Home</button>
+      </div>
+    </div>
+  );
+}
+
+// ── TEST ──────────────────────────────────────────────────────────────────────
+function TestScreen({employee,onSubmit,onBack}){
+  const [cur,setCur]=useState(0);
+  const [answers,setAnswers]=useState({});
+  const [review,setReview]=useState(false);
+  const [submitting,setSubmitting]=useState(false);
+  const [submitted,setSubmitted]=useState(false);
+
+  const allIds=[...MC_Q,...MATCH_Q,...SA_Q].map(q=>`q${q.id}`);
+  const answered=allIds.filter(id=>answers[id]!==undefined&&answers[id]!=="").length;
+
+  function setAns(k,v){setAnswers(p=>({...p,[k]:v}));}
+  function getQ(i){if(i<20)return{q:MC_Q[i],type:"mc"};if(i<25)return{q:MATCH_Q[i-20],type:"match"};return{q:SA_Q[i-25],type:"short"};}
+  function secLabel(i){if(i<20)return"Section A — Multiple Choice";if(i<25)return"Section B — Matching";return"Section C — Customer Service";}
+
+  const {q,type}=getQ(cur);
+  const qk=`q${q.id}`;
+  const curAns=answers[qk];
+
+  async function doSubmit(){
+    if(submitted)return;
+    setSubmitted(true);setSubmitting(true);
+    await onSubmit(answers);
+  }
+
+  if(review){
+    const secs=[
+      {label:"Section A — Multiple Choice (1–20)",items:MC_Q.map(q=>({id:q.id,disp:`Q${q.id}: ${q.question.slice(0,55)}…`,ans:answers[`q${q.id}`]!==undefined?`Option ${String.fromCharCode(65+answers[`q${q.id}`])}`:null}))},
+      {label:"Section B — Matching (21–25)",items:MATCH_Q.map(q=>({id:q.id,disp:`Q${q.id}: ${q.item}`,ans:answers[`q${q.id}`]?`Option ${answers[`q${q.id}`]}`:null}))},
+      {label:"Section C — Short Answer (26–30)",items:SA_Q.map(q=>{const a=answers[`q${q.id}`];return{id:q.id,disp:`Q${q.id}: ${q.scenario.slice(0,50)}…`,ans:a?`${a.slice(0,40)}${a.length>40?"…":""}`:null};})},
+    ];
+    return(
+      <div className="app">
+        <BrandHeader/>
+        <div className="card">
+          <div className="section-title">Review Your Answers</div>
+          {answered<30&&<div style={{background:"#FDECEA",borderRadius:8,padding:"10px 14px",fontSize:13,color:"var(--err)",marginBottom:"1rem"}}>⚠ {30-answered} question(s) still unanswered — please go back and complete them before submitting.</div>}
+          {secs.map(sec=>(
+            <div key={sec.label}>
+              <div style={{fontWeight:700,fontSize:12,textTransform:"uppercase",letterSpacing:1,color:"var(--caramel)",margin:"1rem 0 6px"}}>{sec.label}</div>
+              {sec.items.map(item=>(
+                <div key={item.id} className="review-item">
+                  <div className="review-q">{item.disp}</div>
+                  <div className="review-a" style={{color:item.ans?"var(--espresso)":"var(--err)",fontStyle:item.ans?"normal":"italic"}}>{item.ans||"Not answered"}</div>
+                </div>
+              ))}
+            </div>
+          ))}
+          <div className="nav-row" style={{marginTop:"1.5rem"}}>
+            <button className="btn btn-secondary" onClick={()=>setReview(false)}>← Back to Test</button>
+            <button className="btn btn-primary" onClick={doSubmit} disabled={submitting||answered<30||submitted}>{submitting?"Submitting…":"Submit Test ✓"}</button>
+          </div>
+          {answered<30&&<p style={{textAlign:"center",fontSize:12,color:"var(--err)",marginTop:10}}>Answer all {30-answered} remaining questions first.</p>}
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div className="app">
+      <BrandHeader/>
+      <div className="card">
+        <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{width:`${((cur+1)/TOTAL_Q)*100}%`}}/></div>
+        <div className="progress-label" style={{marginBottom:"0.75rem"}}>Question {cur+1} of {TOTAL_Q}</div>
+        <div className="q-section-badge">{secLabel(cur)}</div>
+        <div className="q-number">Question {q.id} of {TOTAL_Q}</div>
+
+        {type==="mc"&&(<>
+          <div className="q-text">{q.question}</div>
+          {q.options.map((opt,i)=>(
+            <button key={i} className={`option-btn ${curAns===i?"selected":""}`} onClick={()=>setAns(qk,i)}>
+              <span className="option-letter">{String.fromCharCode(65+i)}</span>{opt}
+            </button>
+          ))}
+        </>)}
+
+        {type==="match"&&(<>
+          <div className="q-text">Match the item to its correct description.</div>
+          <div style={{background:"var(--foam)",borderRadius:10,padding:"12px 14px",marginBottom:"1rem"}}>
+            <div style={{fontWeight:700,fontSize:13,marginBottom:8,color:"var(--roast)"}}>Descriptions:</div>
+            {MATCH_OPTS.map(opt=>(
+              <div key={opt.id} style={{fontSize:13,marginBottom:6,display:"flex",gap:8}}>
+                <span style={{fontWeight:700,color:"var(--caramel)",minWidth:16}}>{opt.id}.</span>
+                <span>{opt.text}</span>
+              </div>
+            ))}
+          </div>
+          <div className="match-row">
+            <div className="match-item">{q.item}</div>
+            <select style={{flex:1}} value={curAns||""} onChange={e=>setAns(qk,e.target.value||undefined)}>
+              <option value="">Select description…</option>
+              {MATCH_OPTS.map(opt=><option key={opt.id} value={opt.id}>{opt.id} — {opt.text.slice(0,45)}…</option>)}
+            </select>
+          </div>
+        </>)}
+
+        {type==="short"&&(<>
+          <div className="q-scenario">{q.scenario}</div>
+          <div className="q-text" style={{fontSize:15}}>{q.prompt}</div>
+          <textarea placeholder="Type your response here…" value={curAns||""} onChange={e=>setAns(qk,e.target.value)} rows={5}/>
+        </>)}
+
+        <div className="nav-row">
+          <button className="btn btn-secondary" onClick={()=>setCur(c=>c-1)} disabled={cur===0}>← Back</button>
+          <button className="btn btn-primary" onClick={()=>cur===TOTAL_Q-1?setReview(true):setCur(c=>c+1)}>
+            {cur===TOTAL_Q-1?"Review Answers →":"Next →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── RESULT SCREEN ─────────────────────────────────────────────────────────────
+function ResultScreen({result,onHome}){
+  const passed=result.score>=PASSING_SCORE;
+  const pct=Math.round((result.score/30)*100);
+  return(
+    <div className="app">
+      <BrandHeader/>
+      <div className="card" style={{textAlign:"center"}}>
+        <div style={{marginBottom:8,fontSize:14,color:"var(--roast)"}}>{result.employeeName} · {result.position||"—"} · {new Date(result.submittedAt).toLocaleString()}</div>
+        <div className="result-score">{result.score}/{TOTAL_Q}</div>
+        <div className="result-pct">{pct}%</div>
+        <div style={{marginBottom:"1.5rem"}}><span className={`result-badge ${passed?"badge-pass":"badge-fail"}`}>{passed?"✓ Passed":"✗ Did Not Pass"}</span></div>
+        <div style={{background:passed?"#D5F5E3":"#FDECEA",borderRadius:12,padding:"1rem",fontSize:15,color:passed?"var(--pass)":"var(--err)",lineHeight:1.6,marginBottom:"1rem"}}>
+          {passed?"Congratulations, you passed the Neverland Menu & Service Test.":"Please review the menu and retake the test before working full service confidently."}
+        </div>
+        <p style={{fontSize:13,color:"var(--roast)",marginBottom:"1.5rem"}}>Your result has been saved and will be reviewed by management.</p>
+        <div className="nav-row" style={{justifyContent:"center"}}>
+          <button className="btn btn-secondary" onClick={onHome}>← Home</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── ADMIN LOGIN ───────────────────────────────────────────────────────────────
+function AdminLoginScreen({onLogin,onBack}){
+  const [pw,setPw]=useState("");const [err,setErr]=useState(false);
+  function tryLogin(){if(pw===ADMIN_PASSWORD)onLogin();else{setErr(true);setTimeout(()=>setErr(false),2000);}}
+  return(
+    <div className="app">
+      <BrandHeader onHome={onBack}/>
+      <div className="card">
+        <div className="section-title">Admin Login</div>
+        <div style={{marginBottom:"1rem"}}>
+          <label>Admin Password</label>
+          <input type="password" placeholder="Enter password" value={pw} onChange={e=>{setPw(e.target.value);setErr(false);}} onKeyDown={e=>e.key==="Enter"&&tryLogin()} style={err?{borderColor:"var(--err)"}:{}}/>
+          {err&&<p style={{color:"var(--err)",fontSize:13,marginTop:6}}>Incorrect password. Try: NeverlandAdmin2025</p>}
+        </div>
+        <div className="nav-row">
+          <button className="btn btn-secondary" onClick={onBack}>← Back</button>
+          <button className="btn btn-primary" onClick={tryLogin}>Enter Dashboard →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── ADMIN DETAIL MODAL ────────────────────────────────────────────────────────
+function AdminDetailModal({s,onClose,onUpdateScore,onAddNote,onMarkReviewed}){
+  const [ovr,setOvr]=useState({});
+  const [notes,setNotes]=useState(s.adminNotes||"");
+  const [saved,setSaved]=useState(false);
+
+  const ALL=[
+    ...MC_Q.map(q=>({id:q.id,label:q.question,type:"mc",q})),
+    ...MATCH_Q.map(q=>({id:q.id,label:q.item,type:"match",q})),
+    ...SA_Q.map(q=>({id:q.id,label:q.scenario,type:"short",q})),
+  ];
+
+  function applyOvr(qId){
+    const val=ovr[qId];if(val===undefined||val==="")return;
+    onUpdateScore(s.id,qId,parseInt(val));
+    setSaved(true);setTimeout(()=>setSaved(false),2000);
+  }
+  function saveNotes(){onAddNote(s.id,notes);setSaved(true);setTimeout(()=>setSaved(false),2000);}
+
+  return(
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal-box">
+        <div className="modal-header">
+          <div>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:17,fontWeight:700}}>{s.employeeName}</div>
+            <div style={{fontSize:12,color:"var(--roast)",opacity:.7}}>{s.position||"—"} · {new Date(s.submittedAt).toLocaleString()}</div>
+          </div>
+          <button className="modal-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">
+          {saved&&<div style={{background:"#D5F5E3",color:"var(--pass)",borderRadius:8,padding:"8px 12px",fontSize:13,marginBottom:"1rem",fontWeight:700}}>✓ Saved successfully</div>}
+          <div className="detail-grid">
+            <div className="detail-cell"><div className="detail-label">Score</div><div className="detail-val">{s.score}/30 ({Math.round((s.score/30)*100)}%)</div></div>
+            <div className="detail-cell"><div className="detail-label">Result</div><div className="detail-val"><span className={`tag ${s.score>=PASSING_SCORE?"tag-pass":"tag-fail"}`}>{s.score>=PASSING_SCORE?"Passed":"Not Passed"}</span></div></div>
+            <div className="detail-cell"><div className="detail-label">Reviewed</div><div className="detail-val">{s.adminReviewed?"✓ Yes":"Pending"}</div></div>
+            <div className="detail-cell"><div className="detail-label">Submission ID</div><div className="detail-val" style={{fontSize:11,wordBreak:"break-all"}}>{s.id}</div></div>
+          </div>
+
+          <div style={{display:"flex",gap:8,marginBottom:"1.5rem",flexWrap:"wrap"}}>
+            <button className="btn btn-green" style={{fontSize:12,padding:"8px 14px"}} onClick={()=>onMarkReviewed(s.id)}>
+              {s.adminReviewed?"✓ Marked Reviewed":"Mark as Reviewed"}
+            </button>
+          </div>
+
+          {[{label:"Section A — Multiple Choice",types:["mc"]},{label:"Section B — Matching",types:["match"]},{label:"Section C — Short Answer",types:["short"]}].map(sec=>(
+            <div key={sec.label}>
+              <div style={{fontWeight:700,fontSize:12,textTransform:"uppercase",letterSpacing:1,color:"var(--caramel)",margin:"1rem 0 8px"}}>{sec.label}</div>
+              {ALL.filter(x=>sec.types.includes(x.type)).map(({id,label,type,q})=>{
+                const b=s.breakdown[`q${id}`];
+                const eff=b?.manualOverride!=null?b.manualOverride:(b?.correct?1:0);
+                return(
+                  <div key={id} className="q-detail-row">
+                    <div className="q-detail-text"><strong>Q{id}:</strong> {label}</div>
+                    {type==="mc"&&(<>
+                      <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginTop:4}}>
+                        <span style={{fontSize:13}}>Answer: <strong>{b?.answer!==undefined?`${String.fromCharCode(65+b.answer)}: ${q.options[b.answer]}`:"—"}</strong></span>
+                        <span className={`tag ${b?.correct?"tag-correct":"tag-incorrect"}`}>{b?.correct?"Correct":"Incorrect"}</span>
+                      </div>
+                      {!b?.correct&&<div style={{fontSize:12,color:"var(--pass)",marginTop:4}}>✓ Correct answer: {String.fromCharCode(65+q.correct)}: {q.options[q.correct]}</div>}
+                    </>)}
+                    {type==="match"&&(<>
+                      <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginTop:4}}>
+                        <span style={{fontSize:13}}>Answer: <strong>{b?.answer||"—"}</strong></span>
+                        <span className={`tag ${b?.correct?"tag-correct":"tag-incorrect"}`}>{b?.correct?"Correct":"Incorrect"}</span>
+                      </div>
+                      {!b?.correct&&<div style={{fontSize:12,color:"var(--pass)",marginTop:4}}>✓ Correct: {q.correct}</div>}
+                    </>)}
+                    {type==="short"&&(<>
+                      <div style={{fontSize:12,color:"var(--roast)",fontStyle:"italic",marginBottom:4}}>Rubric: {q.rubric}</div>
+                      <div className="q-detail-sa">{b?.answer||<em style={{color:"var(--err)"}}>No response provided</em>}</div>
+                      <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginBottom:6}}>
+                        <span className={`tag ${eff?"tag-correct":"tag-incorrect"}`}>{eff?"1 pt (auto-scored)":"0 pts (auto-scored)"}</span>
+                        {b?.manualOverride!=null&&<span style={{fontSize:11,color:"var(--caramel)",fontWeight:700}}>⚡ Manual override applied</span>}
+                      </div>
+                      <div className="override-row">
+                        <span style={{fontSize:12,color:"var(--roast)"}}>Override score:</span>
+                        <select value={ovr[`q${id}`]??""} onChange={e=>setOvr(p=>({...p,[`q${id}`]:e.target.value}))}>
+                          <option value="">Select…</option>
+                          <option value="0">0 — Incorrect</option>
+                          <option value="1">1 — Correct</option>
+                        </select>
+                        <button className="btn btn-primary" style={{fontSize:11,padding:"5px 10px"}} disabled={!ovr[`q${id}`]&&ovr[`q${id}`]!=="0"} onClick={()=>applyOvr(`q${id}`)}>Apply</button>
+                      </div>
+                    </>)}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+
+          <div style={{marginTop:"1.5rem"}}>
+            <label>Admin Notes</label>
+            <textarea className="notes-area" value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Add notes about this submission…"/>
+            <button className="btn btn-primary" style={{marginTop:8}} onClick={saveNotes}>Save Notes</button>
+          </div>
+
+          <div style={{marginTop:"1rem",textAlign:"right"}}>
+            <button className="btn btn-secondary" onClick={onClose}>Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── ADMIN DASHBOARD ───────────────────────────────────────────────────────────
+function AdminDashboard({submissions,onUpdateScore,onDeleteSubmission,onAddNote,onMarkReviewed,onBack}){
+  const [search,setSearch]=useState("");
+  const [filter,setFilter]=useState("all");
+  const [posFilter,setPosFilter]=useState("all");
+  const [detail,setDetail]=useState(null);
+
+  const filtered=submissions.filter(s=>{
+    const nm=s.employeeName.toLowerCase().includes(search.toLowerCase());
+    const fl=filter==="all"||(filter==="passed"&&s.score>=PASSING_SCORE)||(filter==="failed"&&s.score<PASSING_SCORE);
+    const pf=posFilter==="all"||s.position===posFilter;
+    return nm&&fl&&pf;
+  });
+
+  function exportCSV(){
+    const hdr=["Name","Position","Date","Score","Percentage","Result","Reviewed",...Array.from({length:30},(_,i)=>`Q${i+1}`),...Array.from({length:30},(_,i)=>`Q${i+1}_Correct`),"Admin_Notes"];
+    const rows=submissions.map(s=>{
+      const pct=Math.round((s.score/30)*100);
+      const base=[s.employeeName,s.position||"",new Date(s.submittedAt).toLocaleString(),s.score,`${pct}%`,s.score>=PASSING_SCORE?"Passed":"Did Not Pass",s.adminReviewed?"Yes":"No"];
+      const ac=Array.from({length:30},(_,i)=>{const b=s.breakdown[`q${i+1}`];if(!b)return"";if(i<20)return b.answer!==undefined?String.fromCharCode(65+b.answer):"";return b.answer||"";});
+      const cc=Array.from({length:30},(_,i)=>{const b=s.breakdown[`q${i+1}`];return b?(b.correct?"Correct":"Incorrect"):"";});
+      return[...base,...ac,...cc,s.adminNotes||""];
+    });
+    const csv=[hdr,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const blob=new Blob([csv],{type:"text/csv"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download="neverland_results.csv";a.click();URL.revokeObjectURL(url);
+  }
+
+  const totalPassed=submissions.filter(s=>s.score>=PASSING_SCORE).length;
+  const avg=submissions.length?Math.round(submissions.reduce((a,s)=>a+s.score,0)/submissions.length):0;
+
+  return(
+    <div className="app">
+      <BrandHeader onHome={onBack}/>
+      {detail&&(
+        <AdminDetailModal
+          s={detail}
+          onClose={()=>setDetail(null)}
+          onUpdateScore={(id,qId,score)=>{onUpdateScore(id,qId,score);setDetail(d=>d?{...submissions.find(s=>s.id===d.id)||d}:null);}}
+          onAddNote={(id,note)=>{onAddNote(id,note);}}
+          onMarkReviewed={(id)=>{onMarkReviewed(id);}}
+        />
+      )}
+      <div className="card">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1rem",flexWrap:"wrap",gap:8}}>
+          <div className="section-title" style={{margin:0}}>Admin Dashboard</div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            <button className="btn btn-secondary" style={{fontSize:12,padding:"8px 12px"}} onClick={exportCSV}>Export CSV</button>
+            <button className="btn btn-secondary" style={{fontSize:12,padding:"8px 12px"}} onClick={onBack}>← Exit</button>
+          </div>
+        </div>
+
+        <div className="stat-row">
+          <div className="stat-card"><div className="stat-num">{submissions.length}</div><div className="stat-lbl">Total</div></div>
+          <div className="stat-card"><div className="stat-num" style={{color:"var(--pass)"}}>{totalPassed}</div><div className="stat-lbl">Passed</div></div>
+          <div className="stat-card"><div className="stat-num">{avg}/30</div><div className="stat-lbl">Avg Score</div></div>
+        </div>
+
+        <div className="search-row">
+          <input type="text" placeholder="Search by name…" value={search} onChange={e=>setSearch(e.target.value)}/>
+          <select value={filter} onChange={e=>setFilter(e.target.value)}>
+            <option value="all">All Results</option>
+            <option value="passed">Passed Only</option>
+            <option value="failed">Did Not Pass</option>
+          </select>
+          <select value={posFilter} onChange={e=>setPosFilter(e.target.value)} style={{width:120}}>
+            <option value="all">All Positions</option>
+            {POSITIONS.map(p=><option key={p} value={p}>{p}</option>)}
+          </select>
+        </div>
+
+        {submissions.length===0&&(
+          <div className="state-box">
+            <div className="state-icon">📋</div>
+            <div className="state-text">No employee submissions yet.</div>
+            <div className="state-sub">Results will appear here once employees complete the official test.</div>
+          </div>
+        )}
+        {submissions.length>0&&filtered.length===0&&(
+          <div className="state-box">
+            <div className="state-icon">🔍</div>
+            <div className="state-text">No results match your search.</div>
+            <div className="state-sub">Try adjusting your filters.</div>
+          </div>
+        )}
+
+        {filtered.length>0&&(
+          <div style={{overflowX:"auto"}}>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Date</th>
+                  <th>Score</th>
+                  <th>Result</th>
+                  <th>Reviewed</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(s=>{
+                  const pct=Math.round((s.score/30)*100);
+                  const passed=s.score>=PASSING_SCORE;
+                  return(
+                    <tr key={s.id}>
+                      <td style={{fontWeight:700}}>{s.employeeName}</td>
+                      <td style={{fontSize:12}}>{s.position||"—"}</td>
+                      <td style={{whiteSpace:"nowrap",fontSize:11,color:"var(--roast)"}}>{new Date(s.submittedAt).toLocaleString()}</td>
+                      <td style={{fontWeight:700}}>{s.score}/30<br/><span style={{fontSize:11,fontWeight:400,color:"var(--roast)"}}>{pct}%</span></td>
+                      <td><span className={`tag ${passed?"tag-pass":"tag-fail"}`}>{passed?"Passed":"Not Passed"}</span></td>
+                      <td><span className={`tag ${s.adminReviewed?"tag-correct":"tag-review"}`}>{s.adminReviewed?"✓ Yes":"Pending"}</span></td>
+                      <td>
+                        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                          <button className="btn btn-secondary" style={{fontSize:11,padding:"5px 10px"}} onClick={()=>setDetail(s)}>View Details</button>
+                          <button className="btn btn-danger" style={{fontSize:11,padding:"5px 10px"}} onClick={()=>{if(window.confirm(`Delete ${s.employeeName}'s submission? This cannot be undone.`))onDeleteSubmission(s.id);}}>Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── MAIN APP ──────────────────────────────────────────────────────────────────
+function App(){
+  const [screen,setScreen]=useState("home");
+  const [employee,setEmployee]=useState(null);
+  const [lastResult,setLastResult]=useState(null);
+  const [submissions,setSubmissions]=useState([]);
+  const [loaded,setLoaded]=useState(false);
+
+  useEffect(()=>{
+    const subs=loadSubs();
+    setSubmissions(subs);
+    setLoaded(true);
+  },[]);
+
+  function nav(s){setScreen(s);}
+
+  function handleTestStart(name,pos){
+    setEmployee({name,pos});
+    setScreen("test");
+  }
+
+  function handleSubmit(answers){
+    return new Promise(resolve=>{
+      const {score,breakdown}=gradeSubmission(answers);
+      const result={
+        id:`${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+        employeeName:employee.name,
+        position:employee.pos||"",
+        submittedAt:new Date().toISOString(),
+        score,
+        breakdown,
+        adminReviewed:false,
+        adminNotes:"",
+      };
+      const updated=[result,...submissions];
+      setSubmissions(updated);
+      saveSubs(updated);
+      setLastResult(result);
+      setScreen("result");
+      resolve();
+    });
+  }
+
+  function handleUpdateScore(subId,qId,newScore){
+    const updated=submissions.map(s=>{
+      if(s.id!==subId)return s;
+      const nb={...s.breakdown,[qId]:{...s.breakdown[qId],manualOverride:newScore,correct:newScore===1}};
+      let total=0;
+      Object.values(nb).forEach(b=>{const e=b.manualOverride!=null?b.manualOverride:(b.correct?1:0);total+=e;});
+      return{...s,breakdown:nb,score:total};
+    });
+    setSubmissions(updated);
+    saveSubs(updated);
+  }
+
+  function handleAddNote(subId,note){
+    const updated=submissions.map(s=>s.id===subId?{...s,adminNotes:note}:s);
+    setSubmissions(updated);
+    saveSubs(updated);
+  }
+
+  function handleMarkReviewed(subId){
+    const updated=submissions.map(s=>s.id===subId?{...s,adminReviewed:!s.adminReviewed}:s);
+    setSubmissions(updated);
+    saveSubs(updated);
+  }
+
+  function handleDelete(id){
+    const updated=submissions.filter(s=>s.id!==id);
+    setSubmissions(updated);
+    saveSubs(updated);
+  }
+
+  if(!loaded)return(
+    <div className="app" style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:"60vh"}}>
+      <div style={{textAlign:"center",color:"var(--roast)"}}>
+        <div style={{fontSize:40,marginBottom:12}}>☕</div>
+        <div style={{fontFamily:"'Playfair Display',serif",fontSize:18}}>Loading…</div>
+      </div>
+    </div>
+  );
+
+  if(screen==="home")return <HomeScreen onNav={nav}/>;
+  if(screen==="study")return <StudyCenter onBack={()=>nav("home")} onNav={nav}/>;
+  if(screen==="flashcards")return <FlashcardsScreen onBack={()=>nav("home")}/>;
+  if(screen==="practice")return <PracticeScreen onBack={()=>nav("home")}/>;
+  if(screen==="test-start")return <TestStartScreen onStart={handleTestStart} onBack={()=>nav("home")}/>;
+  if(screen==="test")return <TestScreen employee={employee} onSubmit={handleSubmit} onBack={()=>nav("home")}/>;
+  if(screen==="result")return <ResultScreen result={lastResult} onHome={()=>nav("home")}/>;
+  if(screen==="admin-login")return <AdminLoginScreen onLogin={()=>nav("admin")} onBack={()=>nav("home")}/>;
+  if(screen==="admin")return(
+    <AdminDashboard
+      submissions={submissions}
+      onUpdateScore={handleUpdateScore}
+      onDeleteSubmission={handleDelete}
+      onAddNote={handleAddNote}
+      onMarkReviewed={handleMarkReviewed}
+      onBack={()=>nav("home")}
+    />
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>
