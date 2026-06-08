@@ -192,10 +192,13 @@ var _React = React,
 
 // ── CONFIG ───────────────────────────────────────────────────────────────────
 var ADMIN_PASSWORD = "NeverlandAdmin2025";
+var TEST_PASSWORD = "NeverlandReady2025"; // ← You can change this to whatever you want to send employees
 var PASSING_SCORE = 26;
 var TOTAL_Q = 30;
 var POSITIONS = ["FOH", "Barista", "Supervisor", "BOH", "Manager", "Other"];
 var STORAGE_KEY = "neverland_v3_submissions";
+var PROGRESS_KEY = "neverland_v3_progress"; // saves in-progress test answers + position
+var UNLOCK_KEY = "neverland_v3_unlocked"; // tracks whether study steps are done
 
 // ── DATA: OFFICIAL TEST ──────────────────────────────────────────────────────
 var MC_Q = [{
@@ -541,6 +544,43 @@ function saveSubs(s) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
   } catch (_unused2) {}
 }
+function saveProgress(d) {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(d));
+  } catch (_unused3) {}
+}
+function loadProgress() {
+  try {
+    var r = localStorage.getItem(PROGRESS_KEY);
+    return r ? JSON.parse(r) : null;
+  } catch (_unused4) {
+    return null;
+  }
+}
+function clearProgress() {
+  try {
+    localStorage.removeItem(PROGRESS_KEY);
+  } catch (_unused5) {}
+}
+function loadUnlock() {
+  try {
+    var r = localStorage.getItem(UNLOCK_KEY);
+    return r ? JSON.parse(r) : {
+      studyDone: false,
+      flashcardsDone: false
+    };
+  } catch (_unused6) {
+    return {
+      studyDone: false,
+      flashcardsDone: false
+    };
+  }
+}
+function saveUnlock(u) {
+  try {
+    localStorage.setItem(UNLOCK_KEY, JSON.stringify(u));
+  } catch (_unused7) {}
+}
 
 // ── SCORING ───────────────────────────────────────────────────────────────────
 function scoreShortAnswer(answer, q) {
@@ -613,7 +653,12 @@ function BrandHeader(_ref) {
 
 // ── HOME SCREEN ───────────────────────────────────────────────────────────────
 function HomeScreen(_ref2) {
-  var onNav = _ref2.onNav;
+  var onNav = _ref2.onNav,
+    unlock = _ref2.unlock,
+    inProgress = _ref2.inProgress;
+  var studyDone = unlock.studyDone;
+  var flashDone = unlock.flashcardsDone;
+  var testUnlocked = studyDone && flashDone;
   return /*#__PURE__*/React.createElement("div", {
     className: "app"
   }, /*#__PURE__*/React.createElement(BrandHeader, null), /*#__PURE__*/React.createElement("div", {
@@ -628,33 +673,110 @@ function HomeScreen(_ref2) {
     className: "section-sub",
     style: {
       textAlign: "center",
-      marginBottom: 0
+      marginBottom: "1rem"
     }
-  }, "Choose where you'd like to start. Study first, then take the official test when you're ready."), /*#__PURE__*/React.createElement("div", {
+  }, "Complete the Study Center and Flashcards first. Then you'll receive a password to unlock the Official Test."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "var(--foam)",
+      borderRadius: 12,
+      padding: "12px 14px",
+      marginBottom: "1.25rem",
+      border: "1px solid var(--border)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      color: "var(--roast)",
+      marginBottom: 8
+    }
+  }, "Your Progress"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, studyDone ? "✅" : "⬜"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: studyDone ? "var(--pass)" : "var(--roast)",
+      fontWeight: studyDone ? 700 : 400
+    }
+  }, "Study Center ", studyDone ? "— Complete" : "")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, flashDone ? "✅" : "⬜"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: flashDone ? "var(--pass)" : "var(--roast)",
+      fontWeight: flashDone ? 700 : 400
+    }
+  }, "Flashcards ", flashDone ? "— Complete" : "")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, testUnlocked ? "🔓" : "🔒"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: testUnlocked ? "var(--caramel)" : "var(--roast)",
+      fontWeight: testUnlocked ? 700 : 400
+    }
+  }, testUnlocked ? "Official Test Unlocked — Enter your test password" : "Official Test Locked — Complete steps above first")))), /*#__PURE__*/React.createElement("div", {
     className: "home-grid"
   }, /*#__PURE__*/React.createElement("div", {
     className: "home-btn",
     onClick: function onClick() {
       return onNav("study");
-    }
+    },
+    style: studyDone ? {
+      borderColor: "var(--pass)"
+    } : {}
   }, /*#__PURE__*/React.createElement("div", {
     className: "home-btn-icon"
-  }, "\uD83D\uDCDA"), /*#__PURE__*/React.createElement("div", {
+  }, studyDone ? "✅" : "📚"), /*#__PURE__*/React.createElement("div", {
     className: "home-btn-title"
   }, "Study Center"), /*#__PURE__*/React.createElement("div", {
     className: "home-btn-sub"
-  }, "Learn the menu & service")), /*#__PURE__*/React.createElement("div", {
+  }, studyDone ? "Completed" : "Step 1 — Start here")), /*#__PURE__*/React.createElement("div", {
     className: "home-btn",
     onClick: function onClick() {
       return onNav("flashcards");
-    }
+    },
+    style: flashDone ? {
+      borderColor: "var(--pass)"
+    } : {}
   }, /*#__PURE__*/React.createElement("div", {
     className: "home-btn-icon"
-  }, "\uD83C\uDCCF"), /*#__PURE__*/React.createElement("div", {
+  }, flashDone ? "✅" : "🃏"), /*#__PURE__*/React.createElement("div", {
     className: "home-btn-title"
   }, "Flashcards"), /*#__PURE__*/React.createElement("div", {
     className: "home-btn-sub"
-  }, "Quick review mode")), /*#__PURE__*/React.createElement("div", {
+  }, flashDone ? "Completed" : "Step 2 — Review & memorize")), /*#__PURE__*/React.createElement("div", {
     className: "home-btn",
     onClick: function onClick() {
       return onNav("practice");
@@ -665,22 +787,37 @@ function HomeScreen(_ref2) {
     className: "home-btn-title"
   }, "Practice Questions"), /*#__PURE__*/React.createElement("div", {
     className: "home-btn-sub"
-  }, "No pressure, instant feedback")), /*#__PURE__*/React.createElement("div", {
+  }, "Optional \u2014 No pressure")), /*#__PURE__*/React.createElement("div", {
     className: "home-btn",
     onClick: function onClick() {
-      return onNav("test-start");
+      return testUnlocked ? onNav("test-start") : null;
     },
-    style: {
+    style: testUnlocked ? {
       borderColor: "var(--caramel)",
-      background: "#FFF8ED"
+      background: "#FFF8ED",
+      cursor: "pointer"
+    } : {
+      opacity: .5,
+      cursor: "not-allowed",
+      background: "#f5f5f5"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "home-btn-icon"
-  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
+  }, testUnlocked ? "📋" : "🔒"), /*#__PURE__*/React.createElement("div", {
     className: "home-btn-title"
   }, "Official Test"), /*#__PURE__*/React.createElement("div", {
     className: "home-btn-sub"
-  }, "30 questions \xB7 Scored & saved")))), /*#__PURE__*/React.createElement("div", {
+  }, testUnlocked ? inProgress ? "Resume in-progress test" : "Step 3 — Enter test password" : "Complete Steps 1 & 2 first"))), inProgress && testUnlocked && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#FFF3CD",
+      borderRadius: 10,
+      padding: "10px 14px",
+      marginTop: "1rem",
+      fontSize: 13,
+      color: "#856404",
+      border: "1px solid #FFE08A"
+    }
+  }, "\u26A0 You have an in-progress test saved. Click Official Test to resume where you left off.")), /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: "center",
       marginTop: "0.5rem"
@@ -701,11 +838,26 @@ function HomeScreen(_ref2) {
 var STUDY_SECTIONS = ["About Neverland", "Menu Categories", "Recommendations", "Allergy & Dietary", "Service Charge", "Customer Service", "Upselling"];
 function StudyCenter(_ref3) {
   var onBack = _ref3.onBack,
-    onNav = _ref3.onNav;
+    onNav = _ref3.onNav,
+    onMarkStudyDone = _ref3.onMarkStudyDone;
   var _useState = useState(0),
     _useState2 = _slicedToArray(_useState, 2),
     active = _useState2[0],
     setActive = _useState2[1];
+  var _useState3 = useState(new Set([0])),
+    _useState4 = _slicedToArray(_useState3, 2),
+    visited = _useState4[0],
+    setVisited = _useState4[1];
+  var totalSections = STUDY_SECTIONS.length;
+  function visitSection(i) {
+    setActive(i);
+    setVisited(function (v) {
+      var n = new Set(v);
+      n.add(i);
+      if (n.size === totalSections) onMarkStudyDone();
+      return n;
+    });
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "app"
   }, /*#__PURE__*/React.createElement(BrandHeader, {
@@ -740,10 +892,18 @@ function StudyCenter(_ref3) {
       key: i,
       className: "study-nav-btn ".concat(active === i ? "active" : ""),
       onClick: function onClick() {
-        return setActive(i);
+        return visitSection(i);
       }
-    }, s);
-  })), active === 0 && /*#__PURE__*/React.createElement(AboutSection, null), active === 1 && /*#__PURE__*/React.createElement(MenuCategoriesSection, null), active === 2 && /*#__PURE__*/React.createElement(RecommendationsSection, null), active === 3 && /*#__PURE__*/React.createElement(AllergySection, null), active === 4 && /*#__PURE__*/React.createElement(ServiceChargeSection, null), active === 5 && /*#__PURE__*/React.createElement(CustomerServiceSection, null), active === 6 && /*#__PURE__*/React.createElement(UpsellSection, null), /*#__PURE__*/React.createElement("div", {
+    }, visited.has(i) && active !== i ? "✓ " : "", s);
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "var(--roast)",
+      opacity: .7,
+      marginTop: 4,
+      width: "100%"
+    }
+  }, visited.size, "/", totalSections, " sections read ", visited.size === totalSections ? "✅" : "")), active === 0 && /*#__PURE__*/React.createElement(AboutSection, null), active === 1 && /*#__PURE__*/React.createElement(MenuCategoriesSection, null), active === 2 && /*#__PURE__*/React.createElement(RecommendationsSection, null), active === 3 && /*#__PURE__*/React.createElement(AllergySection, null), active === 4 && /*#__PURE__*/React.createElement(ServiceChargeSection, null), active === 5 && /*#__PURE__*/React.createElement(CustomerServiceSection, null), active === 6 && /*#__PURE__*/React.createElement(UpsellSection, null), /*#__PURE__*/React.createElement("div", {
     className: "nav-row",
     style: {
       marginTop: "1.5rem"
@@ -954,29 +1114,30 @@ function UpsellSection() {
 
 // ── FLASHCARDS ────────────────────────────────────────────────────────────────
 function FlashcardsScreen(_ref4) {
-  var onBack = _ref4.onBack;
-  var _useState3 = useState(0),
-    _useState4 = _slicedToArray(_useState3, 2),
-    idx = _useState4[0],
-    setIdx = _useState4[1];
-  var _useState5 = useState(false),
+  var onBack = _ref4.onBack,
+    onMarkFlashcardsDone = _ref4.onMarkFlashcardsDone;
+  var _useState5 = useState(0),
     _useState6 = _slicedToArray(_useState5, 2),
-    flipped = _useState6[0],
-    setFlipped = _useState6[1];
-  var _useState7 = useState(function () {
+    idx = _useState6[0],
+    setIdx = _useState6[1];
+  var _useState7 = useState(false),
+    _useState8 = _slicedToArray(_useState7, 2),
+    flipped = _useState8[0],
+    setFlipped = _useState8[1];
+  var _useState9 = useState(function () {
       return [].concat(FLASHCARDS).sort(function () {
         return Math.random() - .5;
       });
     }),
-    _useState8 = _slicedToArray(_useState7, 1),
-    shuffled = _useState8[0];
+    _useState0 = _slicedToArray(_useState9, 1),
+    shuffled = _useState0[0];
   var card = shuffled[idx];
   function next() {
     setFlipped(false);
     setTimeout(function () {
-      return setIdx(function (i) {
-        return (i + 1) % shuffled.length;
-      });
+      var ni = (idx + 1) % shuffled.length;
+      setIdx(ni);
+      if (ni === shuffled.length - 1 || idx === shuffled.length - 1) onMarkFlashcardsDone();
     }, 200);
   }
   function prev() {
@@ -1069,33 +1230,33 @@ function FlashcardsScreen(_ref4) {
 // ── PRACTICE QUESTIONS ────────────────────────────────────────────────────────
 function PracticeScreen(_ref5) {
   var onBack = _ref5.onBack;
-  var _useState9 = useState(function () {
+  var _useState1 = useState(function () {
       return [].concat(PRACTICE_Q).sort(function () {
         return Math.random() - .5;
       });
     }),
-    _useState0 = _slicedToArray(_useState9, 1),
-    questions = _useState0[0];
-  var _useState1 = useState(0),
-    _useState10 = _slicedToArray(_useState1, 2),
-    idx = _useState10[0],
-    setIdx = _useState10[1];
-  var _useState11 = useState(null),
+    _useState10 = _slicedToArray(_useState1, 1),
+    questions = _useState10[0];
+  var _useState11 = useState(0),
     _useState12 = _slicedToArray(_useState11, 2),
-    selected = _useState12[0],
-    setSelected = _useState12[1];
-  var _useState13 = useState(false),
+    idx = _useState12[0],
+    setIdx = _useState12[1];
+  var _useState13 = useState(null),
     _useState14 = _slicedToArray(_useState13, 2),
-    showResult = _useState14[0],
-    setShowResult = _useState14[1];
-  var _useState15 = useState(0),
+    selected = _useState14[0],
+    setSelected = _useState14[1];
+  var _useState15 = useState(false),
     _useState16 = _slicedToArray(_useState15, 2),
-    score = _useState16[0],
-    setScore = _useState16[1];
-  var _useState17 = useState(false),
+    showResult = _useState16[0],
+    setShowResult = _useState16[1];
+  var _useState17 = useState(0),
     _useState18 = _slicedToArray(_useState17, 2),
-    done = _useState18[0],
-    setDone = _useState18[1];
+    score = _useState18[0],
+    setScore = _useState18[1];
+  var _useState19 = useState(false),
+    _useState20 = _slicedToArray(_useState19, 2),
+    done = _useState20[0],
+    setDone = _useState20[1];
   var q = questions[idx];
   function choose(i) {
     if (showResult) return;
@@ -1239,15 +1400,106 @@ function PracticeScreen(_ref5) {
 // ── TEST START ────────────────────────────────────────────────────────────────
 function TestStartScreen(_ref6) {
   var onStart = _ref6.onStart,
-    onBack = _ref6.onBack;
-  var _useState19 = useState(""),
-    _useState20 = _slicedToArray(_useState19, 2),
-    name = _useState20[0],
-    setName = _useState20[1];
-  var _useState21 = useState(""),
+    onBack = _ref6.onBack,
+    savedProgress = _ref6.savedProgress;
+  var _useState21 = useState("password"),
     _useState22 = _slicedToArray(_useState21, 2),
-    pos = _useState22[0],
-    setPos = _useState22[1];
+    step = _useState22[0],
+    setStep = _useState22[1]; // "password" | "info"
+  var _useState23 = useState(""),
+    _useState24 = _slicedToArray(_useState23, 2),
+    pw = _useState24[0],
+    setPw = _useState24[1];
+  var _useState25 = useState(false),
+    _useState26 = _slicedToArray(_useState25, 2),
+    pwErr = _useState26[0],
+    setPwErr = _useState26[1];
+  var _useState27 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.name) || ""),
+    _useState28 = _slicedToArray(_useState27, 2),
+    name = _useState28[0],
+    setName = _useState28[1];
+  var _useState29 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.pos) || ""),
+    _useState30 = _slicedToArray(_useState29, 2),
+    pos = _useState30[0],
+    setPos = _useState30[1];
+  function checkPw() {
+    if (pw === TEST_PASSWORD) {
+      setStep("info");
+      setPwErr(false);
+    } else {
+      setPwErr(true);
+      setTimeout(function () {
+        return setPwErr(false);
+      }, 2500);
+    }
+  }
+  if (step === "password") {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "app"
+    }, /*#__PURE__*/React.createElement(BrandHeader, {
+      onHome: onBack
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "card"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "section-title"
+    }, "\uD83D\uDD12 Test Password Required"), /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: 14,
+        color: "var(--roast)",
+        marginBottom: "1.5rem",
+        lineHeight: 1.6
+      }
+    }, "The Official Test requires a password provided by your manager. Make sure you have completed the Study Center and Flashcards first."), savedProgress && /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#FFF3CD",
+        borderRadius: 8,
+        padding: "10px 14px",
+        fontSize: 13,
+        color: "#856404",
+        marginBottom: "1rem",
+        border: "1px solid #FFE08A"
+      }
+    }, "\u26A0 You have a test in progress for ", /*#__PURE__*/React.createElement("strong", null, savedProgress.name), " (Question ", savedProgress.cur + 1, "/30). Enter your password to resume."), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: "1rem"
+      }
+    }, /*#__PURE__*/React.createElement("label", null, "Test Password"), /*#__PURE__*/React.createElement("input", {
+      type: "password",
+      placeholder: "Enter password from your manager",
+      value: pw,
+      onChange: function onChange(e) {
+        setPw(e.target.value);
+        setPwErr(false);
+      },
+      onKeyDown: function onKeyDown(e) {
+        return e.key === "Enter" && checkPw();
+      },
+      style: pwErr ? {
+        borderColor: "var(--err)"
+      } : {}
+    }), pwErr && /*#__PURE__*/React.createElement("p", {
+      style: {
+        color: "var(--err)",
+        fontSize: 13,
+        marginTop: 6
+      }
+    }, "Incorrect password. Please check with your manager.")), /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-primary btn-full",
+      disabled: !pw.trim(),
+      onClick: checkPw
+    }, "Verify Password \u2192")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "center"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-secondary",
+      style: {
+        fontSize: 12,
+        padding: "8px 16px"
+      },
+      onClick: onBack
+    }, "\u2190 Back to Home")));
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "app"
   }, /*#__PURE__*/React.createElement(BrandHeader, {
@@ -1263,7 +1515,17 @@ function TestStartScreen(_ref6) {
       marginBottom: "1.5rem",
       lineHeight: 1.6
     }
-  }, "This is the official 30-question test. Your results will be saved and reviewed by management. You need ", /*#__PURE__*/React.createElement("strong", null, "26/30 (87%)"), " to pass."), /*#__PURE__*/React.createElement("div", {
+  }, "This is the official 30-question test. Your results will be saved and reviewed by management. You need ", /*#__PURE__*/React.createElement("strong", null, "26/30 (87%)"), " to pass."), savedProgress && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#FFF3CD",
+      borderRadius: 8,
+      padding: "10px 14px",
+      fontSize: 13,
+      color: "#856404",
+      marginBottom: "1rem",
+      border: "1px solid #FFE08A"
+    }
+  }, "\u2713 Resuming your in-progress test (Question ", savedProgress.cur + 1, "/30). Your answers are saved."), /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: "1rem"
     }
@@ -1299,7 +1561,7 @@ function TestStartScreen(_ref6) {
     onClick: function onClick() {
       return onStart(name.trim(), pos);
     }
-  }, "Begin Official Test \u2192")), /*#__PURE__*/React.createElement("div", {
+  }, savedProgress ? "Resume Test →" : "Begin Official Test →")), /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: "center"
     }
@@ -1317,33 +1579,46 @@ function TestStartScreen(_ref6) {
 function TestScreen(_ref7) {
   var employee = _ref7.employee,
     onSubmit = _ref7.onSubmit,
-    onBack = _ref7.onBack;
-  var _useState23 = useState(0),
-    _useState24 = _slicedToArray(_useState23, 2),
-    cur = _useState24[0],
-    setCur = _useState24[1];
-  var _useState25 = useState({}),
-    _useState26 = _slicedToArray(_useState25, 2),
-    answers = _useState26[0],
-    setAnswers = _useState26[1];
-  var _useState27 = useState(false),
-    _useState28 = _slicedToArray(_useState27, 2),
-    review = _useState28[0],
-    setReview = _useState28[1];
-  var _useState29 = useState(false),
-    _useState30 = _slicedToArray(_useState29, 2),
-    submitting = _useState30[0],
-    setSubmitting = _useState30[1];
-  var _useState31 = useState(false),
+    onBack = _ref7.onBack,
+    savedProgress = _ref7.savedProgress;
+  var _useState31 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.cur) || 0),
     _useState32 = _slicedToArray(_useState31, 2),
-    submitted = _useState32[0],
-    setSubmitted = _useState32[1];
+    cur = _useState32[0],
+    setCur = _useState32[1];
+  var _useState33 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.answers) || {}),
+    _useState34 = _slicedToArray(_useState33, 2),
+    answers = _useState34[0],
+    setAnswers = _useState34[1];
+  var _useState35 = useState(false),
+    _useState36 = _slicedToArray(_useState35, 2),
+    review = _useState36[0],
+    setReview = _useState36[1];
+  var _useState37 = useState(false),
+    _useState38 = _slicedToArray(_useState37, 2),
+    submitting = _useState38[0],
+    setSubmitting = _useState38[1];
+  var _useState39 = useState(false),
+    _useState40 = _slicedToArray(_useState39, 2),
+    submitted = _useState40[0],
+    setSubmitted = _useState40[1];
   var allIds = [].concat(MC_Q, MATCH_Q, SA_Q).map(function (q) {
     return "q".concat(q.id);
   });
   var answered = allIds.filter(function (id) {
     return answers[id] !== undefined && answers[id] !== "";
   }).length;
+
+  // Auto-save progress whenever answers or current question changes
+  useEffect(function () {
+    if (!submitted) {
+      saveProgress({
+        name: employee.name,
+        pos: employee.pos,
+        cur: cur,
+        answers: answers
+      });
+    }
+  }, [cur, answers, submitted]);
   function setAns(k, v) {
     setAnswers(function (p) {
       return _objectSpread(_objectSpread({}, p), {}, _defineProperty({}, k, v));
@@ -1389,6 +1664,7 @@ function TestScreen(_ref7) {
           case 1:
             setSubmitted(true);
             setSubmitting(true);
+            clearProgress(); // wipe saved progress so they can't resume a submitted test
             _context.n = 2;
             return onSubmit(answers);
           case 2:
@@ -1606,7 +1882,15 @@ function TestScreen(_ref7) {
         return c + 1;
       });
     }
-  }, cur === TOTAL_Q - 1 ? "Review Answers →" : "Next →"))));
+  }, cur === TOTAL_Q - 1 ? "Review Answers →" : "Next →")), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11,
+      color: "var(--roast)",
+      opacity: .5,
+      textAlign: "center",
+      marginTop: 8
+    }
+  }, "Your progress is saved automatically. Safe to close and return later.")));
 }
 
 // ── RESULT SCREEN ─────────────────────────────────────────────────────────────
@@ -1669,14 +1953,14 @@ function ResultScreen(_ref8) {
 function AdminLoginScreen(_ref9) {
   var onLogin = _ref9.onLogin,
     onBack = _ref9.onBack;
-  var _useState33 = useState(""),
-    _useState34 = _slicedToArray(_useState33, 2),
-    pw = _useState34[0],
-    setPw = _useState34[1];
-  var _useState35 = useState(false),
-    _useState36 = _slicedToArray(_useState35, 2),
-    err = _useState36[0],
-    setErr = _useState36[1];
+  var _useState41 = useState(""),
+    _useState42 = _slicedToArray(_useState41, 2),
+    pw = _useState42[0],
+    setPw = _useState42[1];
+  var _useState43 = useState(false),
+    _useState44 = _slicedToArray(_useState43, 2),
+    err = _useState44[0],
+    setErr = _useState44[1];
   function tryLogin() {
     if (pw === ADMIN_PASSWORD) onLogin();else {
       setErr(true);
@@ -1735,18 +2019,18 @@ function AdminDetailModal(_ref0) {
     onUpdateScore = _ref0.onUpdateScore,
     onAddNote = _ref0.onAddNote,
     onMarkReviewed = _ref0.onMarkReviewed;
-  var _useState37 = useState({}),
-    _useState38 = _slicedToArray(_useState37, 2),
-    ovr = _useState38[0],
-    setOvr = _useState38[1];
-  var _useState39 = useState(s.adminNotes || ""),
-    _useState40 = _slicedToArray(_useState39, 2),
-    notes = _useState40[0],
-    setNotes = _useState40[1];
-  var _useState41 = useState(false),
-    _useState42 = _slicedToArray(_useState41, 2),
-    saved = _useState42[0],
-    setSaved = _useState42[1];
+  var _useState45 = useState({}),
+    _useState46 = _slicedToArray(_useState45, 2),
+    ovr = _useState46[0],
+    setOvr = _useState46[1];
+  var _useState47 = useState(s.adminNotes || ""),
+    _useState48 = _slicedToArray(_useState47, 2),
+    notes = _useState48[0],
+    setNotes = _useState48[1];
+  var _useState49 = useState(false),
+    _useState50 = _slicedToArray(_useState49, 2),
+    saved = _useState50[0],
+    setSaved = _useState50[1];
   var ALL = [].concat(_toConsumableArray(MC_Q.map(function (q) {
     return {
       id: q.id,
@@ -2042,22 +2326,22 @@ function AdminDashboard(_ref10) {
     _onAddNote = _ref10.onAddNote,
     _onMarkReviewed = _ref10.onMarkReviewed,
     onBack = _ref10.onBack;
-  var _useState43 = useState(""),
-    _useState44 = _slicedToArray(_useState43, 2),
-    search = _useState44[0],
-    setSearch = _useState44[1];
-  var _useState45 = useState("all"),
-    _useState46 = _slicedToArray(_useState45, 2),
-    filter = _useState46[0],
-    setFilter = _useState46[1];
-  var _useState47 = useState("all"),
-    _useState48 = _slicedToArray(_useState47, 2),
-    posFilter = _useState48[0],
-    setPosFilter = _useState48[1];
-  var _useState49 = useState(null),
-    _useState50 = _slicedToArray(_useState49, 2),
-    detail = _useState50[0],
-    setDetail = _useState50[1];
+  var _useState51 = useState(""),
+    _useState52 = _slicedToArray(_useState51, 2),
+    search = _useState52[0],
+    setSearch = _useState52[1];
+  var _useState53 = useState("all"),
+    _useState54 = _slicedToArray(_useState53, 2),
+    filter = _useState54[0],
+    setFilter = _useState54[1];
+  var _useState55 = useState("all"),
+    _useState56 = _slicedToArray(_useState55, 2),
+    posFilter = _useState56[0],
+    setPosFilter = _useState56[1];
+  var _useState57 = useState(null),
+    _useState58 = _slicedToArray(_useState57, 2),
+    detail = _useState58[0],
+    setDetail = _useState58[1];
   var filtered = submissions.filter(function (s) {
     var nm = s.employeeName.toLowerCase().includes(search.toLowerCase());
     var fl = filter === "all" || filter === "passed" && s.score >= PASSING_SCORE || filter === "failed" && s.score < PASSING_SCORE;
@@ -2316,33 +2600,59 @@ function AdminDashboard(_ref10) {
 
 // ── MAIN APP ──────────────────────────────────────────────────────────────────
 function App() {
-  var _useState51 = useState("home"),
-    _useState52 = _slicedToArray(_useState51, 2),
-    screen = _useState52[0],
-    setScreen = _useState52[1];
-  var _useState53 = useState(null),
-    _useState54 = _slicedToArray(_useState53, 2),
-    employee = _useState54[0],
-    setEmployee = _useState54[1];
-  var _useState55 = useState(null),
-    _useState56 = _slicedToArray(_useState55, 2),
-    lastResult = _useState56[0],
-    setLastResult = _useState56[1];
-  var _useState57 = useState([]),
-    _useState58 = _slicedToArray(_useState57, 2),
-    submissions = _useState58[0],
-    setSubmissions = _useState58[1];
-  var _useState59 = useState(false),
+  var _useState59 = useState("home"),
     _useState60 = _slicedToArray(_useState59, 2),
-    loaded = _useState60[0],
-    setLoaded = _useState60[1];
+    screen = _useState60[0],
+    setScreen = _useState60[1];
+  var _useState61 = useState(null),
+    _useState62 = _slicedToArray(_useState61, 2),
+    employee = _useState62[0],
+    setEmployee = _useState62[1];
+  var _useState63 = useState(null),
+    _useState64 = _slicedToArray(_useState63, 2),
+    lastResult = _useState64[0],
+    setLastResult = _useState64[1];
+  var _useState65 = useState([]),
+    _useState66 = _slicedToArray(_useState65, 2),
+    submissions = _useState66[0],
+    setSubmissions = _useState66[1];
+  var _useState67 = useState(false),
+    _useState68 = _slicedToArray(_useState67, 2),
+    loaded = _useState68[0],
+    setLoaded = _useState68[1];
+  var _useState69 = useState({
+      studyDone: false,
+      flashcardsDone: false
+    }),
+    _useState70 = _slicedToArray(_useState69, 2),
+    unlock = _useState70[0],
+    setUnlock = _useState70[1];
+  var _useState71 = useState(null),
+    _useState72 = _slicedToArray(_useState71, 2),
+    savedProgress = _useState72[0],
+    setSavedProgress = _useState72[1];
   useEffect(function () {
-    var subs = loadSubs();
-    setSubmissions(subs);
+    setSubmissions(loadSubs());
+    setUnlock(loadUnlock());
+    setSavedProgress(loadProgress());
     setLoaded(true);
   }, []);
   function nav(s) {
     setScreen(s);
+  }
+  function markStudyDone() {
+    var u = _objectSpread(_objectSpread({}, unlock), {}, {
+      studyDone: true
+    });
+    setUnlock(u);
+    saveUnlock(u);
+  }
+  function markFlashcardsDone() {
+    var u = _objectSpread(_objectSpread({}, unlock), {}, {
+      flashcardsDone: true
+    });
+    setUnlock(u);
+    saveUnlock(u);
   }
   function handleTestStart(name, pos) {
     setEmployee({
@@ -2370,6 +2680,7 @@ function App() {
       setSubmissions(updated);
       saveSubs(updated);
       setLastResult(result);
+      setSavedProgress(null);
       setScreen("result");
       resolve();
     });
@@ -2444,18 +2755,22 @@ function App() {
     }
   }, "Loading\u2026")));
   if (screen === "home") return /*#__PURE__*/React.createElement(HomeScreen, {
-    onNav: nav
+    onNav: nav,
+    unlock: unlock,
+    inProgress: !!savedProgress
   });
   if (screen === "study") return /*#__PURE__*/React.createElement(StudyCenter, {
     onBack: function onBack() {
       return nav("home");
     },
-    onNav: nav
+    onNav: nav,
+    onMarkStudyDone: markStudyDone
   });
   if (screen === "flashcards") return /*#__PURE__*/React.createElement(FlashcardsScreen, {
     onBack: function onBack() {
       return nav("home");
-    }
+    },
+    onMarkFlashcardsDone: markFlashcardsDone
   });
   if (screen === "practice") return /*#__PURE__*/React.createElement(PracticeScreen, {
     onBack: function onBack() {
@@ -2466,14 +2781,16 @@ function App() {
     onStart: handleTestStart,
     onBack: function onBack() {
       return nav("home");
-    }
+    },
+    savedProgress: savedProgress
   });
   if (screen === "test") return /*#__PURE__*/React.createElement(TestScreen, {
     employee: employee,
     onSubmit: handleSubmit,
     onBack: function onBack() {
       return nav("home");
-    }
+    },
+    savedProgress: savedProgress
   });
   if (screen === "result") return /*#__PURE__*/React.createElement(ResultScreen, {
     result: lastResult,
