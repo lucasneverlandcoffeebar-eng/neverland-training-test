@@ -642,13 +642,24 @@ function BrandHeader(_ref) {
       cursor: onHome ? "pointer" : "default"
     },
     onClick: onHome
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "brand-logo"
-  }, "\u2615 Employee Training"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "https://neverlandcoffeebar.com/cdn/shop/files/Neverland_Coffee_Bar_Logo_-_Black_copy_3_80x.png?v=1650642295",
+    alt: "Neverland Coffee Bar",
+    style: {
+      width: 64,
+      height: 64,
+      objectFit: "contain",
+      marginBottom: 6,
+      filter: "brightness(0) invert(1)"
+    },
+    onError: function onError(e) {
+      e.target.style.display = "none";
+    }
+  }), /*#__PURE__*/React.createElement("div", {
     className: "brand-title"
   }, "Neverland Coffee Bar"), /*#__PURE__*/React.createElement("div", {
     className: "brand-sub"
-  }, "Menu Knowledge & Customer Service"));
+  }, "Employee Training Portal"));
 }
 
 // ── HOME SCREEN ───────────────────────────────────────────────────────────────
@@ -1418,14 +1429,10 @@ function TestStartScreen(_ref6) {
     _useState28 = _slicedToArray(_useState27, 2),
     name = _useState28[0],
     setName = _useState28[1];
-  var _useState29 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.email) || ""),
+  var _useState29 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.pos) || ""),
     _useState30 = _slicedToArray(_useState29, 2),
-    email = _useState30[0],
-    setEmail = _useState30[1];
-  var _useState31 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.pos) || ""),
-    _useState32 = _slicedToArray(_useState31, 2),
-    pos = _useState32[0],
-    setPos = _useState32[1];
+    pos = _useState30[0],
+    setPos = _useState30[1];
   function checkPw() {
     if (pw === TEST_PASSWORD) {
       setStep("info");
@@ -1541,30 +1548,9 @@ function TestStartScreen(_ref6) {
       return setName(e.target.value);
     },
     onKeyDown: function onKeyDown(e) {
-      return e.key === "Enter" && name.trim() && email.trim() && onStart(name.trim(), pos, email.trim());
+      return e.key === "Enter" && name.trim() && onStart(name.trim(), pos);
     }
   })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: "1rem"
-    }
-  }, /*#__PURE__*/React.createElement("label", null, "Your Email Address *"), /*#__PURE__*/React.createElement("input", {
-    type: "email",
-    placeholder: "yourname@email.com",
-    value: email,
-    onChange: function onChange(e) {
-      return setEmail(e.target.value);
-    },
-    onKeyDown: function onKeyDown(e) {
-      return e.key === "Enter" && name.trim() && email.trim() && onStart(name.trim(), pos, email.trim());
-    }
-  }), /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontSize: 12,
-      color: "var(--roast)",
-      opacity: .7,
-      marginTop: 4
-    }
-  }, "Your manager may use this to send you personalized feedback on your results.")), /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: "1.5rem"
     }
@@ -1582,9 +1568,9 @@ function TestStartScreen(_ref6) {
     }, p);
   }))), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary btn-full",
-    disabled: !name.trim() || !email.trim(),
+    disabled: !name.trim(),
     onClick: function onClick() {
-      return onStart(name.trim(), pos, email.trim());
+      return onStart(name.trim(), pos);
     }
   }, savedProgress ? "Resume Test →" : "Begin Official Test →")), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -1606,26 +1592,26 @@ function TestScreen(_ref7) {
     onSubmit = _ref7.onSubmit,
     onBack = _ref7.onBack,
     savedProgress = _ref7.savedProgress;
-  var _useState33 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.cur) || 0),
+  var _useState31 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.cur) || 0),
+    _useState32 = _slicedToArray(_useState31, 2),
+    cur = _useState32[0],
+    setCur = _useState32[1];
+  var _useState33 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.answers) || {}),
     _useState34 = _slicedToArray(_useState33, 2),
-    cur = _useState34[0],
-    setCur = _useState34[1];
-  var _useState35 = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.answers) || {}),
+    answers = _useState34[0],
+    setAnswers = _useState34[1];
+  var _useState35 = useState(false),
     _useState36 = _slicedToArray(_useState35, 2),
-    answers = _useState36[0],
-    setAnswers = _useState36[1];
+    review = _useState36[0],
+    setReview = _useState36[1];
   var _useState37 = useState(false),
     _useState38 = _slicedToArray(_useState37, 2),
-    review = _useState38[0],
-    setReview = _useState38[1];
+    submitting = _useState38[0],
+    setSubmitting = _useState38[1];
   var _useState39 = useState(false),
     _useState40 = _slicedToArray(_useState39, 2),
-    submitting = _useState40[0],
-    setSubmitting = _useState40[1];
-  var _useState41 = useState(false),
-    _useState42 = _slicedToArray(_useState41, 2),
-    submitted = _useState42[0],
-    setSubmitted = _useState42[1];
+    submitted = _useState40[0],
+    setSubmitted = _useState40[1];
   var allIds = [].concat(MC_Q, MATCH_Q, SA_Q).map(function (q) {
     return "q".concat(q.id);
   });
@@ -1978,14 +1964,14 @@ function ResultScreen(_ref8) {
 function AdminLoginScreen(_ref9) {
   var onLogin = _ref9.onLogin,
     onBack = _ref9.onBack;
-  var _useState43 = useState(""),
+  var _useState41 = useState(""),
+    _useState42 = _slicedToArray(_useState41, 2),
+    pw = _useState42[0],
+    setPw = _useState42[1];
+  var _useState43 = useState(false),
     _useState44 = _slicedToArray(_useState43, 2),
-    pw = _useState44[0],
-    setPw = _useState44[1];
-  var _useState45 = useState(false),
-    _useState46 = _slicedToArray(_useState45, 2),
-    err = _useState46[0],
-    setErr = _useState46[1];
+    err = _useState44[0],
+    setErr = _useState44[1];
   function tryLogin() {
     if (pw === ADMIN_PASSWORD) onLogin();else {
       setErr(true);
@@ -2026,7 +2012,7 @@ function AdminLoginScreen(_ref9) {
       fontSize: 13,
       marginTop: 6
     }
-  }, "Incorrect password. Try: NeverlandAdmin2025")), /*#__PURE__*/React.createElement("div", {
+  }, "Incorrect password. Please try again.")), /*#__PURE__*/React.createElement("div", {
     className: "nav-row"
   }, /*#__PURE__*/React.createElement("button", {
     className: "btn btn-secondary",
@@ -2043,36 +2029,19 @@ function AdminDetailModal(_ref0) {
     onClose = _ref0.onClose,
     onUpdateScore = _ref0.onUpdateScore,
     onAddNote = _ref0.onAddNote,
-    onMarkReviewed = _ref0.onMarkReviewed,
-    onSendFeedback = _ref0.onSendFeedback;
-  var _useState47 = useState({}),
+    onMarkReviewed = _ref0.onMarkReviewed;
+  var _useState45 = useState({}),
+    _useState46 = _slicedToArray(_useState45, 2),
+    ovr = _useState46[0],
+    setOvr = _useState46[1];
+  var _useState47 = useState(s.adminNotes || ""),
     _useState48 = _slicedToArray(_useState47, 2),
-    ovr = _useState48[0],
-    setOvr = _useState48[1];
-  var _useState49 = useState(s.adminNotes || ""),
+    notes = _useState48[0],
+    setNotes = _useState48[1];
+  var _useState49 = useState(false),
     _useState50 = _slicedToArray(_useState49, 2),
-    notes = _useState50[0],
-    setNotes = _useState50[1];
-  var _useState51 = useState(false),
-    _useState52 = _slicedToArray(_useState51, 2),
-    saved = _useState52[0],
-    setSaved = _useState52[1];
-  var _useState53 = useState(false),
-    _useState54 = _slicedToArray(_useState53, 2),
-    showFeedback = _useState54[0],
-    setShowFeedback = _useState54[1];
-  var _useState55 = useState(""),
-    _useState56 = _slicedToArray(_useState55, 2),
-    feedbackMsg = _useState56[0],
-    setFeedbackMsg = _useState56[1];
-  var _useState57 = useState(false),
-    _useState58 = _slicedToArray(_useState57, 2),
-    feedbackSent = _useState58[0],
-    setFeedbackSent = _useState58[1];
-  var _useState59 = useState(false),
-    _useState60 = _slicedToArray(_useState59, 2),
-    sendingFeedback = _useState60[0],
-    setSendingFeedback = _useState60[1];
+    saved = _useState50[0],
+    setSaved = _useState50[1];
   var ALL = [].concat(_toConsumableArray(MC_Q.map(function (q) {
     return {
       id: q.id,
@@ -2167,22 +2136,19 @@ function AdminDetailModal(_ref0) {
     className: "detail-cell"
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-label"
-  }, "Email"), /*#__PURE__*/React.createElement("div", {
-    className: "detail-val",
-    style: {
-      fontSize: 12
-    }
-  }, s.employeeEmail || /*#__PURE__*/React.createElement("em", {
-    style: {
-      opacity: .5
-    }
-  }, "Not provided"))), /*#__PURE__*/React.createElement("div", {
+  }, "Reviewed"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-val"
+  }, s.adminReviewed ? "✓ Yes" : "Pending")), /*#__PURE__*/React.createElement("div", {
     className: "detail-cell"
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-label"
-  }, "Reviewed"), /*#__PURE__*/React.createElement("div", {
-    className: "detail-val"
-  }, s.adminReviewed ? "✓ Yes" : "Pending"))), /*#__PURE__*/React.createElement("div", {
+  }, "Submission ID"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-val",
+    style: {
+      fontSize: 11,
+      wordBreak: "break-all"
+    }
+  }, s.id))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 8,
@@ -2198,93 +2164,7 @@ function AdminDetailModal(_ref0) {
     onClick: function onClick() {
       return onMarkReviewed(s.id);
     }
-  }, s.adminReviewed ? "✓ Marked Reviewed" : "Mark as Reviewed"), s.employeeEmail && /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary",
-    style: {
-      fontSize: 12,
-      padding: "8px 14px"
-    },
-    onClick: function onClick() {
-      return setShowFeedback(function (f) {
-        return !f;
-      });
-    }
-  }, "\u2709\uFE0F ", showFeedback ? "Hide Feedback Form" : "Send Feedback Email")), showFeedback && s.employeeEmail && /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "var(--cream)",
-      borderRadius: 10,
-      padding: "1rem",
-      marginBottom: "1.5rem",
-      border: "1px solid var(--border)"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontWeight: 700,
-      fontSize: 13,
-      marginBottom: 8,
-      color: "var(--espresso)"
-    }
-  }, "\uD83D\uDCE7 Send Feedback to ", s.employeeName), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: "var(--roast)",
-      marginBottom: 8
-    }
-  }, "Sending to: ", /*#__PURE__*/React.createElement("strong", null, s.employeeEmail)), /*#__PURE__*/React.createElement("textarea", {
-    style: {
-      width: "100%",
-      minHeight: 120,
-      padding: "10px 12px",
-      borderRadius: 8,
-      border: "1px solid var(--border)",
-      fontSize: 13,
-      fontFamily: "inherit",
-      resize: "vertical"
-    },
-    placeholder: "Hi ".concat(s.employeeName, ",\n\nThank you for completing the Neverland Coffee Bar training test.\n\nHere's some feedback on your performance:\n\n[Your feedback here]\n\nBest,\nManagement"),
-    value: feedbackMsg,
-    onChange: function onChange(e) {
-      return setFeedbackMsg(e.target.value);
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8,
-      marginTop: 8,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary",
-    style: {
-      fontSize: 12,
-      padding: "8px 16px"
-    },
-    disabled: !feedbackMsg.trim() || sendingFeedback,
-    onClick: function onClick() {
-      return onSendFeedback(s.id, s.employeeEmail, s.employeeName, feedbackMsg, function () {
-        setFeedbackSent(true);
-        setShowFeedback(false);
-        setTimeout(function () {
-          return setFeedbackSent(false);
-        }, 4000);
-      });
-    }
-  }, sendingFeedback ? "Sending…" : "Send Email"), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-secondary",
-    style: {
-      fontSize: 12,
-      padding: "8px 16px"
-    },
-    onClick: function onClick() {
-      return setShowFeedback(false);
-    }
-  }, "Cancel"), feedbackSent && /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "var(--pass)",
-      fontWeight: 700,
-      fontSize: 13
-    }
-  }, "\u2713 Email sent!"))), [{
+  }, s.adminReviewed ? "✓ Marked Reviewed" : "Mark as Reviewed")), [{
     label: "Section A — Multiple Choice",
     types: ["mc"]
   }, {
@@ -2456,24 +2336,23 @@ function AdminDashboard(_ref10) {
     onDeleteSubmission = _ref10.onDeleteSubmission,
     _onAddNote = _ref10.onAddNote,
     _onMarkReviewed = _ref10.onMarkReviewed,
-    onSendFeedback = _ref10.onSendFeedback,
     onBack = _ref10.onBack;
-  var _useState61 = useState(""),
-    _useState62 = _slicedToArray(_useState61, 2),
-    search = _useState62[0],
-    setSearch = _useState62[1];
-  var _useState63 = useState("all"),
-    _useState64 = _slicedToArray(_useState63, 2),
-    filter = _useState64[0],
-    setFilter = _useState64[1];
-  var _useState65 = useState("all"),
-    _useState66 = _slicedToArray(_useState65, 2),
-    posFilter = _useState66[0],
-    setPosFilter = _useState66[1];
-  var _useState67 = useState(null),
-    _useState68 = _slicedToArray(_useState67, 2),
-    detail = _useState68[0],
-    setDetail = _useState68[1];
+  var _useState51 = useState(""),
+    _useState52 = _slicedToArray(_useState51, 2),
+    search = _useState52[0],
+    setSearch = _useState52[1];
+  var _useState53 = useState("all"),
+    _useState54 = _slicedToArray(_useState53, 2),
+    filter = _useState54[0],
+    setFilter = _useState54[1];
+  var _useState55 = useState("all"),
+    _useState56 = _slicedToArray(_useState55, 2),
+    posFilter = _useState56[0],
+    setPosFilter = _useState56[1];
+  var _useState57 = useState(null),
+    _useState58 = _slicedToArray(_useState57, 2),
+    detail = _useState58[0],
+    setDetail = _useState58[1];
   var filtered = submissions.filter(function (s) {
     var nm = s.employeeName.toLowerCase().includes(search.toLowerCase());
     var fl = filter === "all" || filter === "passed" && s.score >= PASSING_SCORE || filter === "failed" && s.score < PASSING_SCORE;
@@ -2590,29 +2469,452 @@ function AdminDashboard(_ref10) {
     },
     onClick: onBack
   }, "\u2190 Exit"))), /*#__PURE__*/React.createElement("div", {
-    className: "stat-row"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "stat-card"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "stat-num"
-  }, submissions.length), /*#__PURE__*/React.createElement("div", {
-    className: "stat-lbl"
-  }, "Total")), /*#__PURE__*/React.createElement("div", {
-    className: "stat-card"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "stat-num",
     style: {
-      color: "var(--pass)"
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))",
+      gap: 10,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg,#2C1810,#4A2C1A)",
+      borderRadius: 12,
+      padding: "16px 14px",
+      textAlign: "center",
+      color: "#fff"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      fontWeight: 800,
+      fontFamily: "'Playfair Display',serif"
+    }
+  }, submissions.length), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      opacity: .8,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      marginTop: 2
+    }
+  }, "Total Tests")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg,#1a7a3a,#27ae60)",
+      borderRadius: 12,
+      padding: "16px 14px",
+      textAlign: "center",
+      color: "#fff"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      fontWeight: 800,
+      fontFamily: "'Playfair Display',serif"
     }
   }, totalPassed), /*#__PURE__*/React.createElement("div", {
-    className: "stat-lbl"
+    style: {
+      fontSize: 11,
+      opacity: .8,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      marginTop: 2
+    }
   }, "Passed")), /*#__PURE__*/React.createElement("div", {
-    className: "stat-card"
+    style: {
+      background: "linear-gradient(135deg,#c0392b,#e74c3c)",
+      borderRadius: 12,
+      padding: "16px 14px",
+      textAlign: "center",
+      color: "#fff"
+    }
   }, /*#__PURE__*/React.createElement("div", {
-    className: "stat-num"
-  }, avg, "/30"), /*#__PURE__*/React.createElement("div", {
-    className: "stat-lbl"
-  }, "Avg Score"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      fontWeight: 800,
+      fontFamily: "'Playfair Display',serif"
+    }
+  }, submissions.length - totalPassed), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      opacity: .8,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      marginTop: 2
+    }
+  }, "Not Passed")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg,#C5A028,#e6c04a)",
+      borderRadius: 12,
+      padding: "16px 14px",
+      textAlign: "center",
+      color: "#fff"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      fontWeight: 800,
+      fontFamily: "'Playfair Display',serif"
+    }
+  }, submissions.length ? Math.round(totalPassed / submissions.length * 100) : 0, "%"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      opacity: .8,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      marginTop: 2
+    }
+  }, "Pass Rate")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg,#1a5276,#2980b9)",
+      borderRadius: 12,
+      padding: "16px 14px",
+      textAlign: "center",
+      color: "#fff"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      fontWeight: 800,
+      fontFamily: "'Playfair Display',serif"
+    }
+  }, avg, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14
+    }
+  }, "/30")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      opacity: .8,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      marginTop: 2
+    }
+  }, "Avg Score"))), submissions.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 12,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#FEFCF8",
+      borderRadius: 12,
+      padding: "14px 16px",
+      border: "1px solid #EDE0C4"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      color: "#4A2C1A",
+      marginBottom: 12
+    }
+  }, "Score Distribution"), function () {
+    var buckets = [{
+      label: "0–17",
+      min: 0,
+      max: 17,
+      color: "#e74c3c"
+    }, {
+      label: "18–21",
+      min: 18,
+      max: 21,
+      color: "#e67e22"
+    }, {
+      label: "22–25",
+      min: 22,
+      max: 25,
+      color: "#f1c40f"
+    }, {
+      label: "26–28",
+      min: 26,
+      max: 28,
+      color: "#2ecc71"
+    }, {
+      label: "29–30",
+      min: 29,
+      max: 30,
+      color: "#27ae60"
+    }];
+    var counts = buckets.map(function (b) {
+      return submissions.filter(function (s) {
+        return s.score >= b.min && s.score <= b.max;
+      }).length;
+    });
+    var maxCount = Math.max.apply(Math, _toConsumableArray(counts).concat([1]));
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 6
+      }
+    }, buckets.map(function (b, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: b.label,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 8
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 36,
+          fontSize: 10,
+          color: "#666",
+          textAlign: "right",
+          flexShrink: 0
+        }
+      }, b.label), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          background: "#F0E8D8",
+          borderRadius: 4,
+          height: 18,
+          overflow: "hidden"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: "".concat(counts[i] / maxCount * 100, "%"),
+          height: "100%",
+          background: b.color,
+          borderRadius: 4,
+          transition: "width .4s",
+          minWidth: counts[i] > 0 ? "4px" : "0"
+        }
+      })), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 20,
+          fontSize: 11,
+          fontWeight: 700,
+          color: "#333",
+          flexShrink: 0
+        }
+      }, counts[i]));
+    }));
+  }()), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#FEFCF8",
+      borderRadius: 12,
+      padding: "14px 16px",
+      border: "1px solid #EDE0C4",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      color: "#4A2C1A",
+      marginBottom: 12,
+      alignSelf: "flex-start"
+    }
+  }, "Pass / Fail Split"), function () {
+    var total = submissions.length;
+    var passed = totalPassed;
+    var failed = total - passed;
+    var pct = total ? Math.round(passed / total * 100) : 0;
+    var r = 40;
+    var circ = 2 * Math.PI * r;
+    var passArc = pct / 100 * circ;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 16
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "100",
+      height: "100",
+      viewBox: "0 0 100 100"
+    }, /*#__PURE__*/React.createElement("circle", {
+      cx: "50",
+      cy: "50",
+      r: r,
+      fill: "none",
+      stroke: "#e74c3c",
+      strokeWidth: "16"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "50",
+      cy: "50",
+      r: r,
+      fill: "none",
+      stroke: "#27ae60",
+      strokeWidth: "16",
+      strokeDasharray: "".concat(passArc, " ").concat(circ),
+      strokeDashoffset: circ / 4,
+      style: {
+        transition: "stroke-dasharray .6s"
+      }
+    }), /*#__PURE__*/React.createElement("text", {
+      x: "50",
+      y: "50",
+      textAnchor: "middle",
+      dominantBaseline: "middle",
+      style: {
+        fontSize: 16,
+        fontWeight: 800,
+        fill: "#2C1810",
+        fontFamily: "Arial"
+      }
+    }, pct, "%")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 12,
+        height: 12,
+        borderRadius: 2,
+        background: "#27ae60",
+        flexShrink: 0
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12
+      }
+    }, /*#__PURE__*/React.createElement("strong", null, passed), " Passed")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 12,
+        height: 12,
+        borderRadius: 2,
+        background: "#e74c3c",
+        flexShrink: 0
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12
+      }
+    }, /*#__PURE__*/React.createElement("strong", null, failed), " Not Passed"))));
+  }())), submissions.length > 0 && function () {
+    var posMap = {};
+    POSITIONS.forEach(function (p) {
+      posMap[p] = {
+        pass: 0,
+        fail: 0
+      };
+    });
+    posMap["Other"] = {
+      pass: 0,
+      fail: 0
+    };
+    submissions.forEach(function (s) {
+      var p = s.position || "Other";
+      if (!posMap[p]) posMap[p] = {
+        pass: 0,
+        fail: 0
+      };
+      if (s.score >= PASSING_SCORE) posMap[p].pass++;else posMap[p].fail++;
+    });
+    var entries = Object.entries(posMap).filter(function (_ref11) {
+      var _ref12 = _slicedToArray(_ref11, 2),
+        v = _ref12[1];
+      return v.pass + v.fail > 0;
+    });
+    if (!entries.length) return null;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#FEFCF8",
+        borderRadius: 12,
+        padding: "14px 16px",
+        border: "1px solid #EDE0C4",
+        marginBottom: 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        letterSpacing: 1,
+        color: "#4A2C1A",
+        marginBottom: 12
+      }
+    }, "Performance by Position"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 8
+      }
+    }, entries.map(function (_ref13) {
+      var _ref14 = _slicedToArray(_ref13, 2),
+        pos = _ref14[0],
+        _ref14$ = _ref14[1],
+        pass = _ref14$.pass,
+        fail = _ref14$.fail;
+      var total = pass + fail;
+      var pct = Math.round(pass / total * 100);
+      return /*#__PURE__*/React.createElement("div", {
+        key: pos,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 10
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 72,
+          fontSize: 11,
+          color: "#555",
+          fontWeight: 600,
+          flexShrink: 0
+        }
+      }, pos), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          background: "#F0E8D8",
+          borderRadius: 6,
+          height: 20,
+          overflow: "hidden",
+          position: "relative"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: "".concat(pct, "%"),
+          height: "100%",
+          background: pct >= 87 ? "#27ae60" : pct >= 70 ? "#f39c12" : "#e74c3c",
+          borderRadius: 6,
+          transition: "width .4s"
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          display: "flex",
+          alignItems: "center",
+          paddingLeft: 8
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 10,
+          fontWeight: 700,
+          color: pct > 30 ? "#fff" : "#555"
+        }
+      }, pass, "/", total, " passed (", pct, "%)"))));
+    })));
+  }(), /*#__PURE__*/React.createElement("div", {
     className: "search-row"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
@@ -2732,37 +3034,37 @@ function AdminDashboard(_ref10) {
 
 // ── MAIN APP ──────────────────────────────────────────────────────────────────
 function App() {
-  var _useState69 = useState("home"),
-    _useState70 = _slicedToArray(_useState69, 2),
-    screen = _useState70[0],
-    setScreen = _useState70[1];
-  var _useState71 = useState(null),
-    _useState72 = _slicedToArray(_useState71, 2),
-    employee = _useState72[0],
-    setEmployee = _useState72[1];
-  var _useState73 = useState(null),
-    _useState74 = _slicedToArray(_useState73, 2),
-    lastResult = _useState74[0],
-    setLastResult = _useState74[1];
-  var _useState75 = useState([]),
-    _useState76 = _slicedToArray(_useState75, 2),
-    submissions = _useState76[0],
-    setSubmissions = _useState76[1];
-  var _useState77 = useState(false),
-    _useState78 = _slicedToArray(_useState77, 2),
-    loaded = _useState78[0],
-    setLoaded = _useState78[1];
-  var _useState79 = useState({
+  var _useState59 = useState("home"),
+    _useState60 = _slicedToArray(_useState59, 2),
+    screen = _useState60[0],
+    setScreen = _useState60[1];
+  var _useState61 = useState(null),
+    _useState62 = _slicedToArray(_useState61, 2),
+    employee = _useState62[0],
+    setEmployee = _useState62[1];
+  var _useState63 = useState(null),
+    _useState64 = _slicedToArray(_useState63, 2),
+    lastResult = _useState64[0],
+    setLastResult = _useState64[1];
+  var _useState65 = useState([]),
+    _useState66 = _slicedToArray(_useState65, 2),
+    submissions = _useState66[0],
+    setSubmissions = _useState66[1];
+  var _useState67 = useState(false),
+    _useState68 = _slicedToArray(_useState67, 2),
+    loaded = _useState68[0],
+    setLoaded = _useState68[1];
+  var _useState69 = useState({
       studyDone: false,
       flashcardsDone: false
     }),
-    _useState80 = _slicedToArray(_useState79, 2),
-    unlock = _useState80[0],
-    setUnlock = _useState80[1];
-  var _useState81 = useState(null),
-    _useState82 = _slicedToArray(_useState81, 2),
-    savedProgress = _useState82[0],
-    setSavedProgress = _useState82[1];
+    _useState70 = _slicedToArray(_useState69, 2),
+    unlock = _useState70[0],
+    setUnlock = _useState70[1];
+  var _useState71 = useState(null),
+    _useState72 = _slicedToArray(_useState71, 2),
+    savedProgress = _useState72[0],
+    setSavedProgress = _useState72[1];
   useEffect(function () {
     setSubmissions(loadSubs());
     setUnlock(loadUnlock());
@@ -2786,11 +3088,10 @@ function App() {
     setUnlock(u);
     saveUnlock(u);
   }
-  function handleTestStart(name, pos, email) {
+  function handleTestStart(name, pos) {
     setEmployee({
       name: name,
-      pos: pos,
-      email: email || ""
+      pos: pos
     });
     setScreen("test");
   }
@@ -2803,7 +3104,6 @@ function App() {
         id: "".concat(Date.now(), "_").concat(Math.random().toString(36).slice(2, 8)),
         employeeName: employee.name,
         position: employee.pos || "",
-        employeeEmail: employee.email || "",
         submittedAt: new Date().toISOString(),
         score: score,
         breakdown: breakdown,
@@ -2946,7 +3246,6 @@ function App() {
     onDeleteSubmission: handleDelete,
     onAddNote: handleAddNote,
     onMarkReviewed: handleMarkReviewed,
-    onSendFeedback: handleSendFeedback,
     onBack: function onBack() {
       return nav("home");
     }
