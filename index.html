@@ -1433,6 +1433,10 @@ function TestStartScreen(_ref6) {
     _useState30 = _slicedToArray(_useState29, 2),
     pos = _useState30[0],
     setPos = _useState30[1];
+  var _useStateEmail = useState((savedProgress === null || savedProgress === void 0 ? void 0 : savedProgress.email) || ""),
+    _useStateEmail2 = _slicedToArray(_useStateEmail, 2),
+    email = _useStateEmail2[0],
+    setEmail = _useStateEmail2[1];
   function checkPw() {
     if (pw === TEST_PASSWORD) {
       setStep("info");
@@ -1548,7 +1552,18 @@ function TestStartScreen(_ref6) {
       return setName(e.target.value);
     },
     onKeyDown: function onKeyDown(e) {
-      return e.key === "Enter" && name.trim() && onStart(name.trim(), pos);
+      return e.key === "Enter" && name.trim() && email.trim() && email.includes("@") && onStart(name.trim(), pos, email.trim());
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: "1rem"
+    }
+  }, /*#__PURE__*/React.createElement("label", null, "Email Address *"), /*#__PURE__*/React.createElement("input", {
+    type: "email",
+    placeholder: "your@email.com",
+    value: email,
+    onChange: function onChange(e) {
+      return setEmail(e.target.value);
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -1568,9 +1583,9 @@ function TestStartScreen(_ref6) {
     }, p);
   }))), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary btn-full",
-    disabled: !name.trim(),
+    disabled: !name.trim() || !email.trim() || !email.includes("@"),
     onClick: function onClick() {
-      return onStart(name.trim(), pos);
+      return onStart(name.trim(), pos, email.trim());
     }
   }, savedProgress ? "Resume Test →" : "Begin Official Test →")), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -3088,10 +3103,11 @@ function App() {
     setUnlock(u);
     saveUnlock(u);
   }
-  function handleTestStart(name, pos) {
+  function handleTestStart(name, pos, email) {
     setEmployee({
       name: name,
-      pos: pos
+      pos: pos,
+      email: email || ""
     });
     setScreen("test");
   }
@@ -3103,6 +3119,7 @@ function App() {
       var result = {
         id: "".concat(Date.now(), "_").concat(Math.random().toString(36).slice(2, 8)),
         employeeName: employee.name,
+        employeeEmail: employee.email || "",
         position: employee.pos || "",
         submittedAt: new Date().toISOString(),
         score: score,
